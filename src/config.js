@@ -94,12 +94,6 @@ function getConfig() {
     enabled: !!config.get("autoit.enabled", true)
   };
 
-  const sounds = {
-    enabled: !!config.get("sounds.enabled", true),
-    chance: toNumber(config.get("sounds.chance"), 2),
-    cooldown: toNumber(config.get("sounds.cooldown"), 5000)
-  };
-
   return {
     enabled: !!config.get("enabled", true),
     performance,
@@ -111,8 +105,7 @@ function getConfig() {
     rust,
     java,
     cpp,
-    autoit,
-    sounds
+    autoit
   };
 }
 

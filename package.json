@@ -451,24 +451,7 @@
           "type": "boolean",
           "default": true,
           "description": "Enable AutoIt semantic highlighting (macros, functions, keywords, variables)."
-        },
-        "smeagol.sounds.enabled": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable Smeagol sound effects and precious messages during editing (easter egg)."
-        },
-        "smeagol.sounds.chance": {
-          "type": "number",
-          "default": 2,
-          "minimum": 0,
-          "maximum": 100,
-          "description": "Probability of Smeagol sound triggering per update (0-100%)."
-        },
-        "smeagol.sounds.cooldown": {
-          "type": "number",
-          "default": 5000,
-          "minimum": 1000,
-          "description": "Minimum milliseconds between Smeagol sounds to avoid annoyance."        }
+        }
       }
     }
   }

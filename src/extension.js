@@ -11,7 +11,6 @@ const { RustHighlighter } = require("./rust-highlighter");
 const { JavaHighlighter } = require("./java-highlighter");
 const { CppHighlighter } = require("./cpp-highlighter");
 const { AutoItHighlighter } = require("./autoit-highlighter");
-const { SmeagolSounds } = require("./smeagol-sounds");
 
 class SmeagolController {
   constructor(context) {
@@ -25,7 +24,6 @@ class SmeagolController {
     this.javaHighlighter = new JavaHighlighter();
     this.cppHighlighter = new CppHighlighter();
     this.autoitHighlighter = new AutoItHighlighter();
-    this.smeagolSounds = new SmeagolSounds();
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -83,9 +81,6 @@ class SmeagolController {
     }
 
     const updateToken = ++this.updateId;
-    
-    // Maybe emit a Smeagol sound
-    this.smeagolSounds.maybeMakeSound();
     
     // Update all highlighting managers in parallel
     await Promise.all([
