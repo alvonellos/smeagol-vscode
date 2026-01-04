@@ -44,7 +44,16 @@ Smeagol provides unified multi-language highlighting, scope visualization, and c
 - Three display modes: bracket-only, line-based, or both
 - Configurable opacity and styling
 
-### 🦀 Rust-Specific Highlighting
+### �‍♂️ Idioms Analyzer (v0.2.1+)
+- **Detects non-idiomatic code patterns** across all 14 languages
+- **Automatic suggestions** showing language-native alternatives
+- **40+ real exemplars** from popular frameworks (Django, Flask, Tokio, Spring, React, etc.)
+- **160+ generated rules** with idiomaticity scoring (0-100)
+- **Framework coverage**: Django, Flask, NumPy, Pandas, Tokio, Serde, Spring, etc.
+- **Auto-analysis** on file open/save with Problems panel integration
+- See [IDIOMS_FEATURES.md](IDIOMS_FEATURES.md) for complete documentation
+
+### �🦀 Rust-Specific Highlighting
 - **Macros**: Bold highlighting for `macro!()` invocations and attributes `#[...]`
 - **Lifetimes**: Italic cyan highlighting for `'lifetime` parameters
 - **Attributes**: Attribute visualization with consistent coloring
