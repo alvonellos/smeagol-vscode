@@ -14,6 +14,10 @@ const { AutoItHighlighter } = require("./autoit-highlighter");
 const { AutoItCompletionProvider } = require("./autoit-completion");
 const { RustCompletionProvider } = require("./rust-completion");
 const { LombokCompletionProvider } = require("./lombok-completion");
+const { PythonCompletionProvider } = require("./python-completion");
+const { SpringBootCompletionProvider, KubernetesCompletionProvider } = require("./spring-kubernetes-completion");
+const { ShellCompletionProvider, PowerShellCompletionProvider } = require("./shell-powershell-completion");
+const { MavenCompletionProvider, GroovyCompletionProvider, JenkinsCompletionProvider } = require("./maven-groovy-jenkins-completion");
 
 class SmeagolController {
   constructor(context) {
@@ -30,6 +34,14 @@ class SmeagolController {
     this.autoitCompletionProvider = new AutoItCompletionProvider();
     this.rustCompletionProvider = new RustCompletionProvider();
     this.lombokCompletionProvider = new LombokCompletionProvider();
+    this.pythonCompletionProvider = new PythonCompletionProvider();
+    this.springBootCompletionProvider = new SpringBootCompletionProvider();
+    this.kubernetesCompletionProvider = new KubernetesCompletionProvider();
+    this.shellCompletionProvider = new ShellCompletionProvider();
+    this.powershellCompletionProvider = new PowerShellCompletionProvider();
+    this.mavenCompletionProvider = new MavenCompletionProvider();
+    this.groovyCompletionProvider = new GroovyCompletionProvider();
+    this.jenkinsCompletionProvider = new JenkinsCompletionProvider();
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -76,6 +88,54 @@ class SmeagolController {
         this.lombokCompletionProvider,
         '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+      ),
+      // Python completions
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'python', scheme: 'file' },
+        this.pythonCompletionProvider,
+        'p', 'i', 'a', 'n', 'l', 'd', 's', 't', 'r', 'f', 'b', 'g', 'm', 'e', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+      ),
+      // Spring Boot completions
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'java', scheme: 'file' },
+        this.springBootCompletionProvider,
+        '@', 's', 'S', 'l', 'o', 'r', 'c', 'm'
+      ),
+      // Kubernetes YAML completions
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'yaml', scheme: 'file' },
+        this.kubernetesCompletionProvider,
+        'k', 'a', 's', 'P', 'D', 'C', 'J', 'S', 'I', 'N', 'R', 'm', 'c', 'l', 'v', 'p'
+      ),
+      // Shell/Bash completions
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'shell', scheme: 'file' },
+        this.shellCompletionProvider,
+        'e', 'c', 'l', 'p', 'd', 'm', 'r', 'k', 'f', 'g', 's', 'a', 'w', 't', 'n', 'x', 'i', 'o'
+      ),
+      // PowerShell completions
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'powershell', scheme: 'file' },
+        this.powershellCompletionProvider,
+        'G', 'S', 'C', 'M', 'R', 'N', 'g', 's', 'c', 'm', 'r', 'n', 'T', 'I', 'A', 'W', 'a', 'w'
+      ),
+      // Maven completions
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'xml', scheme: 'file' },
+        this.mavenCompletionProvider,
+        'm', 'c', 'd', 'p', 'g', 'a', 'v', 'b', 's'
+      ),
+      // Groovy completions
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'groovy', scheme: 'file' },
+        this.groovyCompletionProvider,
+        'd', 'c', 'i', 'e', 't', 'a', '[', '/', '"', 'f', 'm', 's', 'j'
+      ),
+      // Jenkins declarative pipeline completions
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'groovy', scheme: 'file' },
+        this.jenkinsCompletionProvider,
+        'p', 'a', 's', 't', 's', 'p', 'a', 'a', 'e', 'w', 'j', 'b', 's', 'r', 'u', 'c', 'f', 'g'
       )
     );
     schedule();
