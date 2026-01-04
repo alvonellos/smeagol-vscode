@@ -65,11 +65,28 @@ class SmeagolController {
 
   start() {
     const schedule = () => this.scheduleUpdate();
+    
+    // Auto-analyze complexity on file open or change
+    const autoAnalyzeComplexity = (editor) => {
+      if (editor && editor.document && !editor.document.isUntitled) {
+        this.complexityAnalyzer.analyzeDocument(editor);
+      }
+    };
+    
     this.context.subscriptions.push(
-      vscode.window.onDidChangeActiveTextEditor(schedule),
+      vscode.window.onDidChangeActiveTextEditor((editor) => {
+        schedule();
+        autoAnalyzeComplexity(editor);
+      }),
       vscode.window.onDidChangeVisibleTextEditors(schedule),
       vscode.window.onDidChangeTextEditorVisibleRanges(schedule),
-      vscode.workspace.onDidChangeTextDocument(schedule),
+      vscode.workspace.onDidChangeTextDocument((event) => {
+        schedule();
+        const editor = vscode.window.activeTextEditor;
+        if (editor && editor.document === event.document) {
+          autoAnalyzeComplexity(editor);
+        }
+      }),
       vscode.window.onDidChangeTextEditorOptions(schedule),
       vscode.workspace.onDidChangeConfiguration(() => {
         this.highlightManager.reset();
