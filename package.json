@@ -472,4 +472,8 @@
           "type": "number",
           "default": 5000,
           "minimum": 1000,
-          "description": "Minimum milliseconds between Smeagol sounds to avoid annoyance."
+          "description": "Minimum milliseconds between Smeagol sounds to avoid annoyance."        }
+      }
+    }
+  }
+}
