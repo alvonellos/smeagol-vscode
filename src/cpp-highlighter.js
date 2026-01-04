@@ -9,11 +9,11 @@ const vscode = require("vscode");
 class CppHighlighter {
   constructor() {
     this.decorationTypes = {};
-    this.pointerColor = "#ff006f"; // magenta for pointers
-    this.macroColor = "#fff600"; // yellow for macros
-    this.namespaceColor = "#47bc9b"; // teal for namespaces
-    this.templateColor = "#00c7ff"; // cyan for templates
-    this.memoryColor = "#ff844c"; // orange for memory ops
+    this.pointerColor = "#ff006f"; // magenta for pointers (matches theme keywords/operators)
+    this.macroColor = "#facd45"; // gold for macros (matches theme constants)
+    this.namespaceColor = "#00ffd9"; // turquoise for namespaces (matches theme classes)
+    this.templateColor = "#00c7ff"; // cyan for templates (matches theme variables)
+    this.memoryColor = "#ffc66d"; // light orange for memory ops (matches theme functions)
   }
 
   createDecorations() {

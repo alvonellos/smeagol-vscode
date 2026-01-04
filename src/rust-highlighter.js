@@ -11,11 +11,11 @@ const { toRgba } = require("./utils");
 class RustHighlighter {
   constructor() {
     this.decorationTypes = {};
-    this.macroColor = "#fff600"; // yellow for macros
-    this.lifetimeColor = "#00c7ff"; // cyan for lifetimes
-    this.attributeColor = "#ffc66d"; // orange for attributes
-    this.traitColor = "#00ffd9"; // turquoise for traits
-    this.genericColor = "#bb00ff"; // magenta for generics
+    this.macroColor = "#facd45"; // gold for macros (matches theme constants)
+    this.lifetimeColor = "#00c7ff"; // cyan for lifetimes (matches theme variables)
+    this.attributeColor = "#ffc66d"; // light orange for attributes (matches theme functions)
+    this.traitColor = "#00ffd9"; // turquoise for traits (matches theme classes)
+    this.genericColor = "#bb00ff"; // purple for generics (matches theme escapes)
   }
 
   createDecorations() {

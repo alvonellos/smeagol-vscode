@@ -10,11 +10,11 @@ const { JAVA_ANNOTATION, JAVA_GENERIC } = require("./_constants");
 class JavaHighlighter {
   constructor() {
     this.decorationTypes = {};
-    this.annotationColor = "#fff600"; // yellow for annotations
-    this.genericColor = "#00c7ff"; // cyan for generics
-    this.staticColor = "#ffaa00"; // orange for static
-    this.interfaceColor = "#00ffd9"; // turquoise for interfaces
-    this.enumColor = "#c158dc"; // magenta for enums
+    this.annotationColor = "#facd45"; // gold for annotations (matches theme constants)
+    this.genericColor = "#00c7ff"; // cyan for generics (matches theme variables)
+    this.staticColor = "#ffc66d"; // light orange for static (matches theme functions)
+    this.interfaceColor = "#00ffd9"; // turquoise for interfaces (matches theme classes)
+    this.enumColor = "#bb00ff"; // purple for enums (matches theme escapes)
   }
 
   createDecorations() {

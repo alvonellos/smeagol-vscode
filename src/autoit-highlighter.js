@@ -11,15 +11,15 @@ class AutoItHighlighter {
   constructor() {
     this.decorationTypes = {};
     // Smeagol's color palette - each token type gets its own precious hue
-    this.macroColor = "#fff600";        // yellow for macros (bright, like gold!)
-    this.functionColor = "#ffc66d";     // orange for functions (warm and helpful)
-    this.keywordColor = "#ff006f";      // magenta for keywords (control flow)
-    this.variableColor = "#00c7ff";     // cyan for variables (data, precious data)
-    this.commentColor = "#7f8c8d";      // gray for comments (whispered wisdom)
-    this.stringColor = "#a8e6cf";       // green for strings (safe, contained)
-    this.operatorColor = "#ff6b9d";     // pink for operators (logical bonds)
-    this.directiveColor = "#ffd93d";    // gold for directives (compilation rules)
-    this.numberColor = "#85c1e2";       // light blue for numbers (counting precious things)
+    this.macroColor = "#facd45";        // gold for macros (properties/constants)
+    this.functionColor = "#ffc66d";     // light orange for functions (matches theme)
+    this.keywordColor = "#ff006f";      // magenta for keywords (matches theme)
+    this.variableColor = "#00c7ff";     // cyan for variables (matches theme)
+    this.commentColor = "#888888";      // gray for comments (matches theme)
+    this.stringColor = "#00e71c";       // green for strings (matches theme)
+    this.operatorColor = "#ff006f";     // magenta for operators (matches theme)
+    this.directiveColor = "#bb00ff";    // purple for directives (preprocessor)
+    this.numberColor = "#00c7ff";       // cyan for numbers (matches theme)
   }
 
   createDecorations() {
