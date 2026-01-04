@@ -1,8 +1,8 @@
 {
   "name": "smeagol-vscode",
   "displayName": "Smeagol VS Code",
-  "description": "Intelligent semantic code visualization: rainbow highlights, bracket guides, Rust macros, Java annotations, with Kromatic Dark theme.",
-  "version": "0.1.0",
+  "description": "Polyglot IDE: 10+ language completions, semantic highlighting, AI DSL compiler, SonarQube integration, project concordance system.",
+  "version": "0.2.0",
   "publisher": "alexa",
   "repository": {
     "type": "git",
@@ -29,7 +29,14 @@
     "semantic",
     "macro",
     "annotation",
-    "generics"
+    "generics",
+    "polyglot",
+    "ai",
+    "dsl",
+    "completions",
+    "sonarqube",
+    "concordance",
+    "multiLanguage"
   ],
   "main": "./src/extension.js",
   "scripts": {
@@ -80,6 +87,81 @@
         "command": "smeagol.optimizeCode",
         "title": "Optimize Code (Suggestions)",
         "category": "Smeagol"
+      },
+      {
+        "command": "smeagol.initializeProject",
+        "title": "Initialize Smeagol Project",
+        "category": "Smeagol"
+      },
+      {
+        "command": "smeagol.createConcordance",
+        "title": "Create Project Concordance",
+        "category": "Smeagol Tools"
+      },
+      {
+        "command": "smeagol.detectLanguages",
+        "title": "Detect Languages in Workspace",
+        "category": "Smeagol Tools"
+      },
+      {
+        "command": "smeagol.analyzeMetrics",
+        "title": "Analyze Project Metrics",
+        "category": "Smeagol Tools"
+      },
+      {
+        "command": "smeagol.searchSymbols",
+        "title": "Search Symbols Across Project",
+        "category": "Smeagol Tools"
+      },
+      {
+        "command": "smeagol.documentWorkspace",
+        "title": "Generate Workspace Documentation",
+        "category": "Smeagol Tools"
+      },
+      {
+        "command": "smeagol.projectHealthReport",
+        "title": "Generate Project Health Report",
+        "category": "Smeagol Tools"
+      },
+      {
+        "command": "smeagol.sonarqube.test",
+        "title": "Test SonarQube Connection",
+        "category": "Smeagol / SonarQube"
+      },
+      {
+        "command": "smeagol.sonarqube.configure",
+        "title": "Configure SonarQube Settings",
+        "category": "Smeagol / SonarQube"
+      },
+      {
+        "command": "smeagol.sonarqube.metrics",
+        "title": "Show SonarQube Metrics",
+        "category": "Smeagol / SonarQube"
+      },
+      {
+        "command": "smeagol.dsl.compile",
+        "title": "Compile AI DSL",
+        "category": "Smeagol / AI DSL"
+      },
+      {
+        "command": "smeagol.dsl.toHuman",
+        "title": "Generate Human Prompts from DSL",
+        "category": "Smeagol / AI DSL"
+      },
+      {
+        "command": "smeagol.dsl.toMachine",
+        "title": "Generate Machine Prompts from DSL",
+        "category": "Smeagol / AI DSL"
+      },
+      {
+        "command": "smeagol.analyzeComplexity",
+        "title": "Analyze Code Complexity & Branch Paths",
+        "category": "Smeagol / Analysis"
+      },
+      {
+        "command": "smeagol.summonSymbols",
+        "title": "Summon Symbol Wordcloud",
+        "category": "Smeagol / Visualization"
       }
     ],
     "configuration": {

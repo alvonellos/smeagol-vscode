@@ -11,6 +11,7 @@ const { RustHighlighter } = require("./rust-highlighter");
 const { JavaHighlighter } = require("./java-highlighter");
 const { CppHighlighter } = require("./cpp-highlighter");
 const { AutoItHighlighter } = require("./autoit-highlighter");
+const { AplHighlighter } = require("./apl-highlighter");
 const { AutoItCompletionProvider } = require("./autoit-completion");
 const { RustCompletionProvider } = require("./rust-completion");
 const { LombokCompletionProvider } = require("./lombok-completion");
@@ -18,7 +19,14 @@ const { PythonCompletionProvider } = require("./python-completion");
 const { SpringBootCompletionProvider, KubernetesCompletionProvider } = require("./spring-kubernetes-completion");
 const { ShellCompletionProvider, PowerShellCompletionProvider } = require("./shell-powershell-completion");
 const { MavenCompletionProvider, GroovyCompletionProvider, JenkinsCompletionProvider } = require("./maven-groovy-jenkins-completion");
+const { AplCompletionProvider } = require("./apl-completion");
 const { AiHelpersModule } = require("./ai-helpers");
+const { ConcordanceSystem } = require("./concordance-system");
+const { SmeagolTools } = require("./smeagol-tools");
+const { SonarQubeConnector } = require("./sonarqube-connector");
+const { AiDslCompiler } = require("./ai-dsl-compiler");
+const { ComplexityAnalyzer } = require("./complexity-analyzer");
+const { SymbolSummoner } = require("./symbol-summoner");
 
 class SmeagolController {
   constructor(context) {
@@ -32,6 +40,7 @@ class SmeagolController {
     this.javaHighlighter = new JavaHighlighter();
     this.cppHighlighter = new CppHighlighter();
     this.autoitHighlighter = new AutoItHighlighter();
+    this.aplHighlighter = new AplHighlighter();
     this.autoitCompletionProvider = new AutoItCompletionProvider();
     this.rustCompletionProvider = new RustCompletionProvider();
     this.lombokCompletionProvider = new LombokCompletionProvider();
@@ -43,7 +52,13 @@ class SmeagolController {
     this.mavenCompletionProvider = new MavenCompletionProvider();
     this.groovyCompletionProvider = new GroovyCompletionProvider();
     this.jenkinsCompletionProvider = new JenkinsCompletionProvider();
+    this.aplCompletionProvider = new AplCompletionProvider();
     this.aiHelpersModule = new AiHelpersModule(context);
+    this.smeagolTools = new SmeagolTools();
+    this.sonarQubeConnector = new SonarQubeConnector();
+    this.aiDslCompiler = new AiDslCompiler();
+    this.complexityAnalyzer = new ComplexityAnalyzer();
+    this.symbolSummoner = new SymbolSummoner();
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -66,6 +81,7 @@ class SmeagolController {
         this.javaHighlighter.reset();
         this.cppHighlighter.reset();
         this.autoitHighlighter.reset();
+        this.aplHighlighter.reset();
         schedule();
       }),
       // Register AutoIt completion provider - We provides ALL the precious words!
@@ -138,8 +154,58 @@ class SmeagolController {
         { language: 'groovy', scheme: 'file' },
         this.jenkinsCompletionProvider,
         'p', 'a', 's', 't', 's', 'p', 'a', 'a', 'e', 'w', 'j', 'b', 's', 'r', 'u', 'c', 'f', 'g'
+      ),
+      // APL completions - We knows the precious APL operators!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'apl', scheme: 'file' },
+        this.aplCompletionProvider,
+        '⍴', '⌽', '⍒', '⍋', '⊖', ',', '↑', '↓', '⊂', '⊃', '∪', '∩', '⍳', '⍕', '⍎',
+        '/', '\\', '.', '∘', '@', '⍨', '¨', ':', '←', '→', '⎕',
+        '¬', '-', '+', '×', '÷', '⌈', '⌊', '|', '⋆', '⍟', '○', '!', '?',
+        '=', '≠', '<', '>', '≤', '≥',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
       )
     );
+
+    // Register Smeagol Tools
+    this.smeagolTools.register(this.context);
+
+    // Register SonarQube connector
+    this.sonarQubeConnector.register(this.context);
+
+    // Register AI DSL Compiler
+    this.aiDslCompiler.register(this.context);
+
+    // Register project initialization command
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("smeagol.initializeProject", async () => {
+        const workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        if (!workspaceRoot) {
+          vscode.window.showErrorMessage("No workspace folder open");
+          return;
+        }
+        const concordance = new ConcordanceSystem(workspaceRoot);
+        const initialized = await concordance.initialize();
+        if (initialized) {
+          vscode.window.showInformationMessage("✓ Smeagol project initialized");
+        }
+      }),
+      // Complexity analysis command
+      vscode.commands.registerCommand("smeagol.analyzeComplexity", () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+          vscode.window.showErrorMessage("No file open");
+          return;
+        }
+        this.complexityAnalyzer.analyzeDocument(editor);
+        this.complexityAnalyzer.showReport(editor);
+      }),
+      // Symbol summoning command
+      vscode.commands.registerCommand("smeagol.summonSymbols", async () => {
+        await this.symbolSummoner.summonSymbols();
+      })
+    );
+
     schedule();
   }
 
@@ -168,6 +234,7 @@ class SmeagolController {
       this.javaHighlighter.clearAll(editors);
       this.cppHighlighter.clearAll(editors);
       this.autoitHighlighter.clearAll(editors);
+      this.aplHighlighter.clearAll(editors);
       return;
     }
 
@@ -183,13 +250,15 @@ class SmeagolController {
       Promise.resolve(editors.forEach(editor => this.rustHighlighter.update(editor))),
       Promise.resolve(editors.forEach(editor => this.javaHighlighter.update(editor))),
       Promise.resolve(editors.forEach(editor => this.cppHighlighter.update(editor))),
-      Promise.resolve(editors.forEach(editor => this.autoitHighlighter.update(editor)))
+      Promise.resolve(editors.forEach(editor => this.autoitHighlighter.update(editor))),
+      Promise.resolve(editors.forEach(editor => this.aplHighlighter.update(editor)))
     ]);
   }
 
   dispose() {
     this.cppHighlighter.dispose();
     this.autoitHighlighter.dispose();
+    this.aplHighlighter.dispose();
     this.highlightManager.dispose();
     this.indentManager.dispose();
     this.functionManager.dispose();
@@ -197,6 +266,9 @@ class SmeagolController {
     this.bracketGuidesManager.dispose();
     this.rustHighlighter.dispose();
     this.javaHighlighter.dispose();
+    this.smeagolTools.dispose();
+    this.complexityAnalyzer.dispose();
+    this.symbolSummoner.dispose();
   }
 }
 
