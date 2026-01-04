@@ -27,6 +27,7 @@ const { SonarQubeConnector } = require("./sonarqube-connector");
 const { AiDslCompiler } = require("./ai-dsl-compiler");
 const { ComplexityAnalyzer } = require("./complexity-analyzer");
 const { SymbolSummoner } = require("./symbol-summoner");
+const { IdiomsAnalyzer } = require("./idioms-analyzer");
 
 class SmeagolController {
   constructor(context) {
@@ -59,6 +60,7 @@ class SmeagolController {
     this.aiDslCompiler = new AiDslCompiler();
     this.complexityAnalyzer = new ComplexityAnalyzer();
     this.symbolSummoner = new SymbolSummoner();
+    this.idiomsAnalyzer = new IdiomsAnalyzer();
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -70,6 +72,7 @@ class SmeagolController {
     const autoAnalyzeComplexity = (editor) => {
       if (editor && editor.document && !editor.document.isUntitled) {
         this.complexityAnalyzer.analyzeDocument(editor);
+        this.idiomsAnalyzer.analyzeDocument(editor);
       }
     };
     
@@ -220,6 +223,19 @@ class SmeagolController {
       // Symbol summoning command
       vscode.commands.registerCommand("smeagol.summonSymbols", async () => {
         await this.symbolSummoner.summonSymbols();
+      }),
+      // Idioms analysis command
+      vscode.commands.registerCommand("smeagol.analyzeIdioms", () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+          vscode.window.showErrorMessage("No file open");
+          return;
+        }
+        this.idiomsAnalyzer.analyzeDocument(editor);
+        const stats = this.idiomsAnalyzer.getStatistics();
+        vscode.window.showInformationMessage(
+          `✓ Idioms Analysis: ${stats.totalRules} rules across ${stats.totalLanguages} languages`
+        );
       })
     );
 
@@ -286,6 +302,7 @@ class SmeagolController {
     this.smeagolTools.dispose();
     this.complexityAnalyzer.dispose();
     this.symbolSummoner.dispose();
+    this.idiomsAnalyzer.dispose();
   }
 }
 

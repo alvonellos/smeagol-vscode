@@ -159,6 +159,11 @@
         "category": "Smeagol / Analysis"
       },
       {
+        "command": "smeagol.analyzeIdioms",
+        "title": "Analyze Code Idioms",
+        "category": "Smeagol / Analysis"
+      },
+      {
         "command": "smeagol.summonSymbols",
         "title": "Summon Symbol Wordcloud",
         "category": "Smeagol / Visualization"
