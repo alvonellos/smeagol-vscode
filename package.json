@@ -50,6 +50,38 @@
       "editor.bracketPairColorization.enabled": true,
       "editor.guides.bracketPairs": true
     },
+    "commands": [
+      {
+        "command": "smeagol.generateBoilerplate",
+        "title": "Generate Boilerplate Code",
+        "category": "Smeagol"
+      },
+      {
+        "command": "smeagol.refactorCode",
+        "title": "Refactor Code (Suggestions)",
+        "category": "Smeagol"
+      },
+      {
+        "command": "smeagol.generateDocs",
+        "title": "Generate Documentation",
+        "category": "Smeagol"
+      },
+      {
+        "command": "smeagol.generateTests",
+        "title": "Generate Test Template",
+        "category": "Smeagol"
+      },
+      {
+        "command": "smeagol.explainCode",
+        "title": "Explain Selected Code",
+        "category": "Smeagol"
+      },
+      {
+        "command": "smeagol.optimizeCode",
+        "title": "Optimize Code (Suggestions)",
+        "category": "Smeagol"
+      }
+    ],
     "configuration": {
       "title": "Smeagol",
       "properties": {

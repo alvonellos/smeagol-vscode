@@ -18,6 +18,7 @@ const { PythonCompletionProvider } = require("./python-completion");
 const { SpringBootCompletionProvider, KubernetesCompletionProvider } = require("./spring-kubernetes-completion");
 const { ShellCompletionProvider, PowerShellCompletionProvider } = require("./shell-powershell-completion");
 const { MavenCompletionProvider, GroovyCompletionProvider, JenkinsCompletionProvider } = require("./maven-groovy-jenkins-completion");
+const { AiHelpersModule } = require("./ai-helpers");
 
 class SmeagolController {
   constructor(context) {
@@ -42,6 +43,7 @@ class SmeagolController {
     this.mavenCompletionProvider = new MavenCompletionProvider();
     this.groovyCompletionProvider = new GroovyCompletionProvider();
     this.jenkinsCompletionProvider = new JenkinsCompletionProvider();
+    this.aiHelpersModule = new AiHelpersModule(context);
     this.updateTimer = null;
     this.updateId = 0;
   }
