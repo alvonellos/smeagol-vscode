@@ -400,21 +400,17 @@
         "smeagol.brackets.colors": {
           "type": "array",
           "default": [
-            "#ff844c",
-            "#fdd835",
-            "#aee571",
-            "#039be5",
-            "#c158dc",
-            "#ff006f",
-            "#00e71c",
-            "#00c7ff",
-            "#facd45",
-            "#ffc66d"
+            "#FF0000",
+            "#FF7F00",
+            "#FFFF00",
+            "#00FF00",
+            "#0000FF",
+            "#4B0082"
           ],
           "items": {
             "type": "string"
           },
-          "description": "Palette used for bracket depth coloring."
+          "description": "Palette used for bracket depth coloring (default: LGBT pride flag colors)."
         },
         "smeagol.brackets.style": {
           "type": "string",

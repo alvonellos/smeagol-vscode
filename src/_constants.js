@@ -19,6 +19,16 @@ const DEFAULT_PALETTE = [
   "#ffc66d"  // light orange
 ];
 
+// LGBT Pride Flag Colors (in proper order)
+const LGBT_PRIDE_PALETTE = [
+  "#FF0000", // Red
+  "#FF7F00", // Orange
+  "#FFFF00", // Yellow
+  "#00FF00", // Green (Lime)
+  "#0000FF", // Blue
+  "#4B0082"  // Indigo/Purple
+];
+
 // Keywords to exclude from highlighting
 const DEFAULT_EXCLUDE = [
   // Control flow
@@ -98,6 +108,7 @@ const INDENT_SIZES = {
 
 module.exports = {
   DEFAULT_PALETTE,
+  LGBT_PRIDE_PALETTE,
   DEFAULT_EXCLUDE,
   RUST_KEYWORDS,
   RUST_MACROS,

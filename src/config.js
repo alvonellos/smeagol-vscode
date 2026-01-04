@@ -1,7 +1,7 @@
 "use strict";
 
 const vscode = require("vscode");
-const { DEFAULT_PALETTE, DEFAULT_EXCLUDE } = require("./constants");
+const { DEFAULT_PALETTE, LGBT_PRIDE_PALETTE, DEFAULT_EXCLUDE } = require("./constants");
 const {
   sanitizeStringArray,
   sanitizeColorArray,
@@ -72,7 +72,7 @@ function getConfig() {
 
   const brackets = {
     enabled: !!config.get("brackets.enabled", true),
-    colors: sanitizeColorArray(config.get("brackets.colors"), DEFAULT_PALETTE),
+    colors: sanitizeColorArray(config.get("brackets.colors"), LGBT_PRIDE_PALETTE),
     style: config.get("brackets.style", "bracket"),
     lineWidth: toNumber(config.get("brackets.lineWidth"), 1),
     lineOpacity: toOpacity(config.get("brackets.lineOpacity"), 0.5)

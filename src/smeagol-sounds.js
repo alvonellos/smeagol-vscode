@@ -6,57 +6,86 @@ const vscode = require("vscode");
  * Smeagol Sounds & Easter Eggs
  * Precious! Random Smeagol vocalizations while you code
  * "What has it got in its pocketses?"
+ * 
+ * Audio Features:
+ * - 20+ Smeagol/Gollum quotes with sound IDs for external playback
+ * - Sound effects tracking and identification
+ * - Configurable probability and cooldown
+ * - Output channel for visibility
+ * - Ready for audio integration (101 Soundboards, etc.)
  */
 class SmeagolSounds {
   constructor() {
     this.enabled = true;
     this.soundChance = 0.02; // 2% chance per update
+    this.soundCooldown = 5000; // Minimum 5 seconds between sounds
+    this.lastSoundTime = 0;
+    this.outputChannel = vscode.window.createOutputChannel("🧙 Smeagol");
+
+    // Sound objects with IDs for potential external audio playback
     this.sounds = [
-      "Precious!",
-      "Gollum, gollum!",
-      "My preciousss...",
-      "Tricksy hobbitses!",
-      "Yesss, we like it raw!",
-      "She took it from us!",
-      "Thief! Baggins! Thief!",
-      "Nasty, tricksy, false!",
-      "We hates it forever!",
-      "Sneak, sneak!",
-      "What has it got in its pocketses?",
-      "Filthy little hobbitses!",
-      "We must have it!",
-      "It came to us, precious came to us!",
-      "*Shhhhh*"
+      { text: "Precious!", id: "precious" },
+      { text: "Gollum, gollum!", id: "gollum_laugh" },
+      { text: "My preciousss...", id: "precious_hiss" },
+      { text: "Tricksy hobbitses!", id: "tricksy" },
+      { text: "Yesss, we like it raw!", id: "like_raw" },
+      { text: "She took it from us!", id: "took_it" },
+      { text: "Thief! Baggins! Thief!", id: "thief" },
+      { text: "Nasty, tricksy, false!", id: "nasty" },
+      { text: "We hates it forever!", id: "hates" },
+      { text: "Sneak, sneak!", id: "sneak" },
+      { text: "What has it got in its pocketses?", id: "pocketses" },
+      { text: "Filthy little hobbitses!", id: "filthy" },
+      { text: "We must have it!", id: "must_have" },
+      { text: "It came to us, precious came to us!", id: "came_to_us" },
+      { text: "The precious is ours!", id: "precious_ours" },
+      { text: "We are alone. All alone.", id: "alone" },
+      { text: "It burns us! It burns us!", id: "burns" },
+      { text: "The dark takes us home...", id: "dark" },
+      { text: "Beautiful! Precious! Mine!", id: "mine" },
+      { text: "No! They're going to steal it!", id: "steal" }
     ];
 
     this.hisses = [
-      "Sssssssss",
-      "*hisss*",
-      "Yesssss",
-      "Preciousssss",
-      "Thissss"
+      { text: "Sssssssss", id: "hiss_long" },
+      { text: "*hisss*", id: "hiss_short" },
+      { text: "Yesssss", id: "yesss" },
+      { text: "Preciousssss", id: "precious_long" },
+      { text: "Thissss", id: "this_long" }
     ];
 
-    this.lastSoundTime = 0;
-    this.soundCooldown = 5000; // Minimum 5 seconds between sounds
+    this.gollumSounds = [
+      { text: "Gollum, gollum!", id: "gollum_1" },
+      { text: "*gollum*", id: "gollum_2" },
+      { text: "Glub, glub!", id: "glub" },
+      { text: "*wet gargling noises*", id: "gargle" },
+      { text: "Ack ack ack!", id: "ack" }
+    ];
   }
 
   /**
-   * Randomly emit a Smeagol sound
+   * Randomly emit a Smeagol sound based on configuration
    */
   maybeMakeSound() {
-    if (!this.enabled) {
+    const config = vscode.workspace.getConfiguration("smeagol");
+    
+    if (!config.get("sounds.enabled", true)) {
       return;
     }
 
     const now = Date.now();
-    if (now - this.lastSoundTime < this.soundCooldown) {
+    const soundCooldown = config.get("sounds.cooldown", 5000);
+    const soundChance = config.get("sounds.chance", 2) / 100; // Convert percentage to decimal
+
+    // Respect cooldown period
+    if (now - this.lastSoundTime < soundCooldown) {
       return;
     }
 
-    if (Math.random() < this.soundChance) {
-      this.makeSound();
+    // Random chance
+    if (Math.random() < soundChance) {
       this.lastSoundTime = now;
+      this.makeSound();
     }
   }
 
@@ -67,63 +96,82 @@ class SmeagolSounds {
     const rand = Math.random();
     let sound;
 
-    if (rand < 0.7) {
+    if (rand < 0.65) {
+      // 65% chance: precious quotes
       sound = this.sounds[Math.floor(Math.random() * this.sounds.length)];
-    } else if (rand < 0.9) {
+    } else if (rand < 0.8) {
+      // 15% chance: hisses
       sound = this.hisses[Math.floor(Math.random() * this.hisses.length)];
     } else {
-      sound = this.getRandomGollumSound();
+      // 20% chance: gollum sounds
+      sound = this.gollumSounds[Math.floor(Math.random() * this.gollumSounds.length)];
     }
 
-    // Display in status bar
-    this.showStatusMessage(sound);
-    
-    // Try to speak it (if available)
-    this.speakSound(sound);
+    // Display in status bar and output channel
+    this.showStatusMessage(sound.text, sound.id);
   }
 
   /**
    * Generate random gollum gargling sounds
    */
   getRandomGollumSound() {
-    const sounds = [
-      "Gollum, gollum!",
-      "*gollum*",
-      "Glub, glub!",
-      "*wet gargling noises*",
-      "Ack ack ack!"
-    ];
-    return sounds[Math.floor(Math.random() * sounds.length)];
+    return this.gollumSounds[Math.floor(Math.random() * this.gollumSounds.length)];
   }
 
   /**
-   * Show message in VS Code status bar
+   * Show message in VS Code status bar and output channel
+   * @param {string} message - The message to display
+   * @param {string} soundId - ID for potential audio playback (e.g., from 101 Soundboards)
    */
-  showStatusMessage(message) {
-    const channel = vscode.window.createOutputChannel("Smeagol");
-    channel.appendLine(`🧙 ${message}`);
-  }
+  showStatusMessage(message, soundId = "") {
+    // Timestamp for output channel
+    const timestamp = new Date().toLocaleTimeString();
+    const outputText = soundId ? `[${timestamp}] ${message} [${soundId}]` : `[${timestamp}] ${message}`;
+    
+    // Log to output channel for visibility
+    this.outputChannel.appendLine(outputText);
+    
+    // Show in status bar (brief - 3 seconds)
+    const statusMessage = `🧙 ${message}`;
+    vscode.window.setStatusBarMessage(statusMessage, 3000);
 
-  /**
-   * Attempt to speak the sound (accessibility feature)
-   * Note: This requires system TTS, fails gracefully if not available
-   */
-  speakSound(message) {
-    try {
-      // Web Speech API would go here if this was browser-based
-      // For VS Code, we'll just log it
-      // In a real implementation, could call system `say` command on macOS
-      // or `PowerShell -Command "Add-Type -AssemblyName System.Speech; (New-Object System.Speech.Synthesis.SpeechSynthesizer).Speak('$message')"` on Windows
-    } catch (e) {
-      // Silently fail - not critical
+    // Trigger audio playback if configured
+    if (soundId) {
+      this.triggerAudio(soundId);
     }
   }
 
   /**
-   * Set sound frequency (0.0 - 1.0)
+   * Trigger audio playback
+   * This method is prepared for future integration with audio APIs
+   * 
+   * Possible integration points:
+   * - Web Audio API fetch from soundboard
+   * - System audio libraries
+   * - External audio server
+   * - Browser-based sound effects
+   * 
+   * Sound IDs map to: https://www.101soundboards.com/boards/32962-gollum-smeagol-soundboard
+   * 
+   * @param {string} soundId - Sound identifier for lookup
+   */
+  triggerAudio(soundId) {
+    // Future enhancement: Fetch and play audio from soundboard API
+    // Currently just identifies which sound should play
+    // Format: console.log(`Would play sound: ${soundId}`);
+    
+    // Placeholder for audio library integration
+    // Examples:
+    // - const audioUrl = `https://www.101soundboards.com/sounds/${soundId}.mp3`;
+    // - const audio = new Audio(audioUrl);
+    // - audio.play().catch(e => console.log('Audio play failed', e));
+  }
+
+  /**
+   * Set sound frequency (0-100 as percentage)
    */
   setSoundChance(chance) {
-    this.soundChance = Math.max(0, Math.min(1, chance));
+    this.soundChance = Math.max(0, Math.min(1, chance / 100));
   }
 
   /**
@@ -134,7 +182,7 @@ class SmeagolSounds {
   }
 
   /**
-   * Get a precious message
+   * Get a precious developer message
    */
   getPreciousMessage() {
     const messages = [
@@ -158,6 +206,15 @@ class SmeagolSounds {
       "Deployment is dangerous. Precious things get broken."
     ];
     return messages[Math.floor(Math.random() * messages.length)];
+  }
+
+  /**
+   * Dispose resources
+   */
+  dispose() {
+    if (this.outputChannel) {
+      this.outputChannel.dispose();
+    }
   }
 }
 
