@@ -11,6 +11,7 @@ const { RustHighlighter } = require("./rust-highlighter");
 const { JavaHighlighter } = require("./java-highlighter");
 const { CppHighlighter } = require("./cpp-highlighter");
 const { AutoItHighlighter } = require("./autoit-highlighter");
+const { AutoItCompletionProvider } = require("./autoit-completion");
 
 class SmeagolController {
   constructor(context) {
@@ -24,6 +25,7 @@ class SmeagolController {
     this.javaHighlighter = new JavaHighlighter();
     this.cppHighlighter = new CppHighlighter();
     this.autoitHighlighter = new AutoItHighlighter();
+    this.autoitCompletionProvider = new AutoItCompletionProvider();
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -47,7 +49,17 @@ class SmeagolController {
         this.cppHighlighter.reset();
         this.autoitHighlighter.reset();
         schedule();
-      })
+      }),
+      // Register AutoIt completion provider - We provides ALL the precious words!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'autoit', scheme: 'file' },
+        this.autoitCompletionProvider,
+        // Trigger on common characters
+        '$', '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+      )
     );
     schedule();
   }
