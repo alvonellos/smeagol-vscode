@@ -9,6 +9,9 @@ const { HtmlManager } = require("./html");
 const { BracketGuidesManager } = require("./brackets");
 const { RustHighlighter } = require("./rust-highlighter");
 const { JavaHighlighter } = require("./java-highlighter");
+const { CppHighlighter } = require("./cpp-highlighter");
+const { AutoItHighlighter } = require("./autoit-highlighter");
+const { SmeagolSounds } = require("./smeagol-sounds");
 
 class SmeagolController {
   constructor(context) {
@@ -20,6 +23,9 @@ class SmeagolController {
     this.bracketGuidesManager = new BracketGuidesManager();
     this.rustHighlighter = new RustHighlighter();
     this.javaHighlighter = new JavaHighlighter();
+    this.cppHighlighter = new CppHighlighter();
+    this.autoitHighlighter = new AutoItHighlighter();
+    this.smeagolSounds = new SmeagolSounds();
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -40,6 +46,8 @@ class SmeagolController {
         this.bracketGuidesManager.reset();
         this.rustHighlighter.reset();
         this.javaHighlighter.reset();
+        this.cppHighlighter.reset();
+        this.autoitHighlighter.reset();
         schedule();
       })
     );
@@ -69,10 +77,15 @@ class SmeagolController {
       this.bracketGuidesManager.clearAll(editors);
       this.rustHighlighter.clearAll(editors);
       this.javaHighlighter.clearAll(editors);
+      this.cppHighlighter.clearAll(editors);
+      this.autoitHighlighter.clearAll(editors);
       return;
     }
 
     const updateToken = ++this.updateId;
+    
+    // Maybe emit a Smeagol sound
+    this.smeagolSounds.maybeMakeSound();
     
     // Update all highlighting managers in parallel
     await Promise.all([
@@ -82,11 +95,15 @@ class SmeagolController {
       this.htmlManager.update(editors, config, updateToken),
       this.bracketGuidesManager.update(editors, config),
       Promise.resolve(editors.forEach(editor => this.rustHighlighter.update(editor))),
-      Promise.resolve(editors.forEach(editor => this.javaHighlighter.update(editor)))
+      Promise.resolve(editors.forEach(editor => this.javaHighlighter.update(editor))),
+      Promise.resolve(editors.forEach(editor => this.cppHighlighter.update(editor))),
+      Promise.resolve(editors.forEach(editor => this.autoitHighlighter.update(editor)))
     ]);
   }
 
   dispose() {
+    this.cppHighlighter.dispose();
+    this.autoitHighlighter.dispose();
     this.highlightManager.dispose();
     this.indentManager.dispose();
     this.functionManager.dispose();
