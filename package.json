@@ -1,0 +1,448 @@
+{
+  "name": "smeagol-vscode",
+  "displayName": "Smeagol VS Code",
+  "description": "Intelligent semantic code visualization: rainbow highlights, bracket guides, Rust macros, Java annotations, with Kromatic Dark theme.",
+  "version": "0.1.0",
+  "publisher": "alexa",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Themes",
+    "Visualization",
+    "Other"
+  ],
+  "keywords": [
+    "kromatic",
+    "rainbow",
+    "highlight",
+    "indent",
+    "brackets",
+    "theme",
+    "rust",
+    "java",
+    "semantic",
+    "macro",
+    "annotation",
+    "generics"
+  ],
+  "main": "./src/extension.js",
+  "scripts": {
+    "package:vsix": "powershell -ExecutionPolicy Bypass -File scripts/package.ps1"
+  },
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Kromatic Dark (Smeagol)",
+        "uiTheme": "vs-dark",
+        "path": "./themes/kromatic-dark-color-theme.json"
+      }
+    ],
+    "configurationDefaults": {
+      "editor.bracketPairColorization.enabled": true,
+      "editor.guides.bracketPairs": true
+    },
+    "configuration": {
+      "title": "Smeagol",
+      "properties": {
+        "smeagol.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable all Smeagol features."
+        },
+        "smeagol.performance.refreshDelayMs": {
+          "type": "number",
+          "default": 120,
+          "description": "Debounce delay in milliseconds for repainting decorations."
+        },
+        "smeagol.performance.maxDocumentLength": {
+          "type": "number",
+          "default": 400000,
+          "description": "Skip decorations for files larger than this many characters."
+        },
+        "smeagol.performance.maxLineCount": {
+          "type": "number",
+          "default": 10000,
+          "description": "Skip decorations for files with more than this many lines."
+        },
+        "smeagol.highlights.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic multi-identifier highlights."
+        },
+        "smeagol.highlights.colors": {
+          "type": "array",
+          "default": [
+            "#ff844c",
+            "#fdd835",
+            "#aee571",
+            "#039be5",
+            "#c158dc",
+            "#ff006f",
+            "#00e71c",
+            "#00c7ff",
+            "#facd45",
+            "#ffc66d"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Palette used for automatic identifier highlights."
+        },
+        "smeagol.highlights.minOccurrences": {
+          "type": "number",
+          "default": 2,
+          "description": "Minimum number of occurrences before a token is highlighted."
+        },
+        "smeagol.highlights.minLength": {
+          "type": "number",
+          "default": 2,
+          "description": "Minimum token length to highlight."
+        },
+        "smeagol.highlights.maxTokens": {
+          "type": "number",
+          "default": 120,
+          "description": "Maximum number of unique tokens to highlight per editor."
+        },
+        "smeagol.highlights.backgroundOpacity": {
+          "type": "number",
+          "default": 0.16,
+          "description": "Background opacity for highlight decorations (0-1)."
+        },
+        "smeagol.highlights.borderOpacity": {
+          "type": "number",
+          "default": 0.65,
+          "description": "Border opacity for highlight decorations (0-1)."
+        },
+        "smeagol.highlights.borderWidth": {
+          "type": "number",
+          "default": 1,
+          "description": "Border width in pixels for highlight decorations."
+        },
+        "smeagol.highlights.borderRadius": {
+          "type": "number",
+          "default": 2,
+          "description": "Border radius in pixels for highlight decorations."
+        },
+        "smeagol.highlights.exclude": {
+          "type": "array",
+          "default": [
+            "if",
+            "else",
+            "for",
+            "while",
+            "do",
+            "switch",
+            "case",
+            "break",
+            "continue",
+            "return",
+            "try",
+            "catch",
+            "finally",
+            "throw",
+            "new",
+            "delete",
+            "typeof",
+            "instanceof",
+            "in",
+            "of",
+            "void",
+            "true",
+            "false",
+            "null",
+            "undefined",
+            "class",
+            "function",
+            "extends",
+            "implements",
+            "interface",
+            "enum",
+            "const",
+            "let",
+            "var",
+            "import",
+            "export",
+            "default",
+            "public",
+            "private",
+            "protected",
+            "static",
+            "async",
+            "await",
+            "yield",
+            "this",
+            "super",
+            "get",
+            "set",
+            "package",
+            "namespace",
+            "module",
+            "type",
+            "from",
+            "as",
+            "with",
+            "debugger",
+            "using"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Tokens that should never be highlighted."
+        },
+        "smeagol.highlights.ignoreLanguages": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Language IDs to skip for auto highlights."
+        },
+        "smeagol.indent.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable rainbow indentation guides and line shading."
+        },
+        "smeagol.indent.colors": {
+          "type": "array",
+          "default": [
+            "#ff844c",
+            "#fdd835",
+            "#aee571",
+            "#039be5",
+            "#c158dc",
+            "#ff006f",
+            "#00e71c",
+            "#00c7ff",
+            "#facd45",
+            "#ffc66d"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Palette used for indent coloring."
+        },
+        "smeagol.indent.indentOpacity": {
+          "type": "number",
+          "default": 0.18,
+          "description": "Opacity for indentation block coloring (0-1)."
+        },
+        "smeagol.indent.lineOpacity": {
+          "type": "number",
+          "default": 0.08,
+          "description": "Opacity for full-line shading (0-1)."
+        },
+        "smeagol.indent.style": {
+          "type": "string",
+          "enum": [
+            "indent",
+            "line",
+            "both"
+          ],
+          "default": "both",
+          "description": "Choose how indentation coloring is applied."
+        },
+        "smeagol.indent.ignoreLanguages": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Language IDs to skip for indent coloring."
+        },
+        "smeagol.functions.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable rainbow function and class highlights."
+        },
+        "smeagol.functions.colors": {
+          "type": "array",
+          "default": [
+            "#ff844c",
+            "#fdd835",
+            "#aee571",
+            "#039be5",
+            "#c158dc",
+            "#ff006f",
+            "#00e71c",
+            "#00c7ff",
+            "#facd45",
+            "#ffc66d"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Palette used for function and class highlights."
+        },
+        "smeagol.functions.minOccurrences": {
+          "type": "number",
+          "default": 2,
+          "description": "Minimum occurrences before a symbol is highlighted."
+        },
+        "smeagol.functions.minLength": {
+          "type": "number",
+          "default": 2,
+          "description": "Minimum symbol length to highlight."
+        },
+        "smeagol.functions.maxSymbols": {
+          "type": "number",
+          "default": 200,
+          "description": "Maximum number of symbols to consider per editor."
+        },
+        "smeagol.functions.requireDefinitionAndCall": {
+          "type": "boolean",
+          "default": true,
+          "description": "Require both a definition and a call/usage before highlighting."
+        },
+        "smeagol.functions.highlightStyle": {
+          "type": "string",
+          "enum": [
+            "line",
+            "name"
+          ],
+          "default": "line",
+          "description": "Highlight full lines or just the symbol name."
+        },
+        "smeagol.functions.backgroundOpacity": {
+          "type": "number",
+          "default": 0.12,
+          "description": "Background opacity for function highlights (0-1)."
+        },
+        "smeagol.functions.borderOpacity": {
+          "type": "number",
+          "default": 0.55,
+          "description": "Border opacity for function highlights (0-1)."
+        },
+        "smeagol.functions.borderWidth": {
+          "type": "number",
+          "default": 1,
+          "description": "Border width for function highlights."
+        },
+        "smeagol.functions.borderRadius": {
+          "type": "number",
+          "default": 2,
+          "description": "Border radius for function highlights."
+        },
+        "smeagol.functions.includeLanguages": {
+          "type": "array",
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "description": "Limit function highlighting to these language IDs (empty means all)."
+        },
+        "smeagol.html.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable rainbow HTML tag coloring."
+        },
+        "smeagol.html.colors": {
+          "type": "array",
+          "default": [
+            "#ff844c",
+            "#fdd835",
+            "#aee571",
+            "#039be5",
+            "#c158dc",
+            "#ff006f",
+            "#00e71c",
+            "#00c7ff",
+            "#facd45",
+            "#ffc66d"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Palette used for HTML tag coloring."
+        },
+        "smeagol.html.delimiterOpacity": {
+          "type": "number",
+          "default": 0.7,
+          "description": "Opacity for tag delimiters like < and > (0-1)."
+        },
+        "smeagol.html.includeLanguages": {
+          "type": "array",
+          "default": [
+            "html",
+            "javascriptreact",
+            "typescriptreact",
+            "javascript",
+            "typescript"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Language IDs to enable HTML tag coloring."
+        },
+        "smeagol.html.taggedTemplateNames": {
+          "type": "array",
+          "default": [
+            "html"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Tagged template names to treat as HTML (JS/TS only)."
+        },
+        "smeagol.brackets.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable bracket pair guides with depth-based coloring."
+        },
+        "smeagol.brackets.colors": {
+          "type": "array",
+          "default": [
+            "#ff844c",
+            "#fdd835",
+            "#aee571",
+            "#039be5",
+            "#c158dc",
+            "#ff006f",
+            "#00e71c",
+            "#00c7ff",
+            "#facd45",
+            "#ffc66d"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "Palette used for bracket depth coloring."
+        },
+        "smeagol.brackets.style": {
+          "type": "string",
+          "enum": [
+            "bracket",
+            "line",
+            "both"
+          ],
+          "default": "bracket",
+          "description": "How to highlight brackets: 'bracket' (just brackets), 'line' (full lines), or 'both'."
+        },
+        "smeagol.brackets.lineWidth": {
+          "type": "number",
+          "default": 1,
+          "description": "Border width in pixels for bracket guides."
+        },
+        "smeagol.brackets.lineOpacity": {
+          "type": "number",
+          "default": 0.5,
+          "description": "Opacity for bracket guide lines (0-1)."
+        },
+        "smeagol.rust.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Rust-specific semantic highlighting (macros, lifetimes, attributes)."
+        },
+        "smeagol.java.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Java-specific semantic highlighting (annotations, generics, static members)."
+        }
+      }
+    }
+  }
+}
