@@ -4,6 +4,10 @@
   "description": "Intelligent semantic code visualization: rainbow highlights, bracket guides, Rust macros, Java annotations, with Kromatic Dark theme.",
   "version": "0.1.0",
   "publisher": "alexa",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alvonellos/smeagol-vscode"
+  },
   "license": "MIT",
   "engines": {
     "vscode": "^1.80.0"
