@@ -12,6 +12,8 @@ const { JavaHighlighter } = require("./java-highlighter");
 const { CppHighlighter } = require("./cpp-highlighter");
 const { AutoItHighlighter } = require("./autoit-highlighter");
 const { AutoItCompletionProvider } = require("./autoit-completion");
+const { RustCompletionProvider } = require("./rust-completion");
+const { LombokCompletionProvider } = require("./lombok-completion");
 
 class SmeagolController {
   constructor(context) {
@@ -26,6 +28,8 @@ class SmeagolController {
     this.cppHighlighter = new CppHighlighter();
     this.autoitHighlighter = new AutoItHighlighter();
     this.autoitCompletionProvider = new AutoItCompletionProvider();
+    this.rustCompletionProvider = new RustCompletionProvider();
+    this.lombokCompletionProvider = new LombokCompletionProvider();
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -59,6 +63,19 @@ class SmeagolController {
         'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
         'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+      ),
+      // Register Rust completion provider - We knows the precious Rust traits and crates!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'rust', scheme: 'file' },
+        this.rustCompletionProvider,
+        'V', 'S', 'H', 'M', 'A', 'I', 'O', 'R', 'B', 'F', 'E', 'T', 'C', 'D', 'P', 'L', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+      ),
+      // Register Lombok completion provider - We knows the precious Lombok annotations!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'java', scheme: 'file' },
+        this.lombokCompletionProvider,
+        '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
       )
     );
     schedule();
