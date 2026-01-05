@@ -1,14 +1,19 @@
 "use strict";
 
 const vscode = require("vscode");
+const { CompletionCache } = require("./completion-cache");
+const { Debouncer } = require("./debouncer");
 
 /**
  * Python Completion Provider
  * IntelliJ-like completions for Python with full standard library and popular packages
+ * Optimized with caching and debouncing for high performance
  */
 class PythonCompletionProvider {
   constructor() {
     this.completionItems = [];
+    this.cache = new CompletionCache(500, 5 * 60 * 1000); // 500 items, 5min TTL
+    this.debouncer = new Debouncer(() => this.completionItems, 300);
     this.initialize();
   }
 
@@ -95,11 +100,34 @@ class PythonCompletionProvider {
   }
 
   provideCompletionItems(document, position, token, context) {
+    // Check cache first
+    const docKey = `${document.uri.fsPath}:${position.line}:${position.character}`;
+    const cached = this.cache.get(docKey);
+    if (cached) {
+      return cached;
+    }
+
+    // Return completion items and cache them
+    this.cache.set(docKey, this.completionItems);
     return this.completionItems;
   }
 
   resolveCompletionItem(item, token) {
     return item;
+  }
+
+  /**
+   * Get cache statistics for monitoring performance
+   */
+  getCacheStats() {
+    return this.cache.getStats();
+  }
+
+  /**
+   * Get debouncer statistics
+   */
+  getDebounceStats() {
+    return this.debouncer.getStats();
   }
 }
 

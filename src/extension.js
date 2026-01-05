@@ -23,6 +23,7 @@ const { AplCompletionProvider } = require("./apl-completion");
 const { AiHelpersModule } = require("./ai-helpers");
 const { ConcordanceSystem } = require("./concordance-system");
 const { SmeagolTools } = require("./smeagol-tools");
+const { Debouncer } = require("./debouncer");
 const { SonarQubeConnector } = require("./sonarqube-connector");
 const { AiDslCompiler } = require("./ai-dsl-compiler");
 const { ComplexityAnalyzer } = require("./complexity-analyzer");
