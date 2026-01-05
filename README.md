@@ -1,333 +1,330 @@
-# Smeagol VS Code Extension
+# 🧙‍♂️ Smeagol VS Code Extension v0.2.2
 
-**Intelligent Semantic Code Visualization with Kromatic Dark Theme**
+**Polyglot IDE with Automatic Code Complexity Analysis**
 
-Smeagol provides unified multi-language highlighting, scope visualization, and code structure insights with minimal performance overhead. Built specifically for polyglot developers working with Java, Rust, Python, JavaScript/TypeScript, and more.
+Smeagol provides intelligent code analysis, 470+ smart completions for 14 languages, and automatic complexity detection—all without needing commands.
 
-## Features
+## ⭐ Star Feature: Automatic Complexity Analysis
 
-### 🎨 Kromatic Dark Theme
-- Dark professional theme with carefully crafted colors
-- Based on IntelliJ's Kromatic theme
-- Semantic token support for all major languages
-- Optimized for extended coding sessions
+No commands needed. When you open ANY code file:
 
-### 🌈 Rainbow Highlights
-- Automatic occurrence-based identifier highlighting
-- Configurable color palette
-- Smart token filtering (exclude keywords, operators, etc.)
-- Respects minimum occurrence threshold
-- Performance-optimized for large files
+```
+FILE OPENS
+    ↓
+Smeagol analyzes functions automatically
+    ↓
+Calculates cyclomatic complexity
+    ↓
+Tracks exponential branch paths
+    ↓
+Shows in Problems panel (Ctrl+Shift+M)
+    ↓
+🟢 GREEN (1-5) → Good
+🟡 YELLOW (6-10) → Monitor  
+🔴 RED (11-20) → Refactor soon
+🔴🔴 DARK RED (20+) → Refactor NOW
+```
 
-### 📊 Rainbow Indentation Guides
-- Depth-based indentation visualization
-- Three styles: indent markers, full-line shading, or both
-- Configurable colors and opacity
-- Language-aware indent size detection
+## 🎯 What's Included
 
-### 🔤 Function & Class Visualization
-- Rainbow coloring for function/class definitions
-- Visual distinction between definitions and calls
-- Optional full-line highlighting
-- Per-language configuration
+### Core Features
+- **Automatic Complexity Analysis** - Runs on every file, no commands
+- **Cyclomatic Complexity** - Measure function complexity
+- **Branch Path Tracking** - Exponential growth visualization
+- **14-Language Support** - Python, Java, Rust, Go, JavaScript, Shell, and more
+- **470+ Completions** - Smart suggestions for all supported languages
+- **Semantic Highlighting** - Language-aware code visualization
+- **APL Language Support** - 50+ operators (unique!)
+- **Idioms Analyzer** - Detect non-idiomatic code patterns
 
-### 🏷️ HTML/XML Tag Coloring
-- Rainbow tag colorization
-- Delimiter opacity control
-- Tagged template support for JS/TS (e.g., `html`...)
-- Smart language detection
+### Completion Providers
+- **Python**: stdlib, decorators, async, Django, Flask, NumPy, Pandas, Requests
+- **Java/Spring Boot**: annotations, configuration, starters
+- **Kubernetes YAML**: resources, fields, manifests
+- **Shell/PowerShell**: cmdlets, keywords, variables
+- **And 10 more languages...**
 
-### 🆕 Bracket Pair Guides
-- Automatic bracket pair detection and visualization
-- Supports: `()`, `[]`, `{}`, `<>`
-- Depth-based color assignment
-- Three display modes: bracket-only, line-based, or both
-- Configurable opacity and styling
+### AI Helper Commands
+- Generate boilerplate code
+- Refactor suggestions
+- Documentation generation
+- Test generation
+- Code explanation
+- Code optimization
 
-### �‍♂️ Idioms Analyzer (v0.2.1+)
-- **Detects non-idiomatic code patterns** across all 14 languages
-- **Automatic suggestions** showing language-native alternatives
-- **40+ real exemplars** from popular frameworks (Django, Flask, Tokio, Spring, React, etc.)
-- **160+ generated rules** with idiomaticity scoring (0-100)
-- **Framework coverage**: Django, Flask, NumPy, Pandas, Tokio, Serde, Spring, etc.
-- **Auto-analysis** on file open/save with Problems panel integration
-- See [IDIOMS_FEATURES.md](IDIOMS_FEATURES.md) for complete documentation
+## 🚀 Quick Start (5 minutes)
 
-### �🦀 Rust-Specific Highlighting
-- **Macros**: Bold highlighting for `macro!()` invocations and attributes `#[...]`
-- **Lifetimes**: Italic cyan highlighting for `'lifetime` parameters
-- **Attributes**: Attribute visualization with consistent coloring
-- **Trait Bounds**: Detection of `impl` and `trait` declarations
-- **Generics**: Generic parameter `<T>` highlighting
-
-### ☕ Java-Specific Highlighting
-- **Annotations**: Bold yellow highlighting for `@AnnotationName`
-- **Generics**: Cyan `<Type, AnotherType>` parameter visualization
-- **Static Members**: Orange highlighting for `static` declarations
-- **Interfaces**: Turquoise interface name coloring
-- **Enums**: Magenta enum declaration highlighting
-
-### 🎯 Other Supported Languages
-- Python (keywords, decorators)
-- Go (exported items, type references)
-- C/C++ (type specifiers, qualifiers)
-- And more via semantic token support
-
-## Quick Start
-
-1. Install from VS Code Extensions marketplace
-2. Select "Kromatic Dark (Smeagol)" theme
-3. Customize settings under `smeagol.*` as needed
-
+### 1. Open a Test File
 ```bash
-code --install-extension alexa.smeagol-vscode
+File → Open File → test-complexity.py
 ```
 
-## Configuration
+### 2. Watch Automatic Analysis
+Open the Problems panel: `Ctrl+Shift+M`
 
-All settings are under the `smeagol.*` namespace. Access via:
-- VS Code Settings UI (Cmd/Ctrl+,)
-- JSON settings: `.vscode/settings.json`
+You'll see complexity warnings like:
+```
+🔴 veryComplex: High cyclomatic complexity: 15
+🔴 complex_function: Cyclomatic complexity: 8
+🟡 moderate_function: Cyclomatic complexity: 4
+```
 
-### Essential Settings
+### 3. Try Completions
+Type Python code and press `Ctrl+Space`:
+```python
+print(
+```
+See 50+ Python completions appear!
+
+### 4. Try APL (Optional)
+Open `test-apl.apl` and type `⍴` → see 50+ operator completions
+
+Done! 🎉 You've tested all major features!
+
+## 📊 What Makes Smeagol Special
+
+| Feature | Unique? | Notes |
+|---------|---------|-------|
+| **Automatic Complexity** | ⭐⭐⭐ | Runs automatically, no commands! |
+| **Branch Path Tracking** | ⭐⭐⭐ | Competitors don't have this |
+| **APL Support** | ⭐⭐⭐ | 50+ operators, very rare |
+| **14-Language Support** | ⭐⭐ | All at once, polyglot |
+| **470+ Completions** | ⭐⭐ | Comprehensive framework support |
+| **Idioms Analyzer** | ⭐⭐ | Detects non-idiomatic patterns |
+| **AI Helpers** | ⭐ | 6 useful commands |
+
+## 📖 Documentation
+
+Start with one of these:
+
+- **[QUICK_START.md](QUICK_START.md)** - 5-minute walkthrough
+- **[RUN_GUIDE.md](RUN_GUIDE.md)** - Step-by-step testing
+- **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - All 28 commands cheat sheet
+- **[ADVANCED_FEATURES.md](ADVANCED_FEATURES.md)** - Complexity thresholds, deep dive
+- **[ARCHITECTURE.md](ARCHITECTURE.md)** - How it works internally
+- **[IDIOMS_FEATURES.md](IDIOMS_FEATURES.md)** - Code idioms analyzer
+- **[RELEASE_NOTES_V0.2.2.md](RELEASE_NOTES_V0.2.2.md)** - What's new in this version
+
+## ⚡ 28 Registered Commands
+
+### Complexity Analysis
+- Analyze Complexity
+- Show Complexity Report
+- Reset Complexity Cache
+
+### Symbol Tools
+- Summon Symbol Wordcloud
+- Generate Symbol Summary
+- Jump to Symbol Definition
+
+### AI Helpers
+- Generate Boilerplate Code
+- Refactor Code
+- Generate Documentation
+- Generate Tests
+- Explain Code
+- Optimize Code
+
+### Project Tools
+- Initialize Smeagol Project
+- Show Concordance
+- Update Complexity Thresholds
+- Configure Smeagol
+
+### Code Tools
+- Format Document
+- Show Bracket Pairs
+- Highlight Occurrences
+- Show Function Metrics
+
+### And 13 more...
+
+## 📈 Build Metrics
+
+| Metric | Value |
+|--------|-------|
+| Version | 0.2.2 |
+| VSIX Size | 202.71 KB |
+| Files | 77 in package |
+| Languages | 14 active |
+| Commands | 28 registered |
+| Completions | 470+ items |
+| Modules | 32 JavaScript files |
+| Build Time | ~2 seconds |
+| Performance | <100ms on typical files |
+
+## 🔧 Installation
+
+### From VS Code Marketplace
+Extensions → Search "Smeagol" → Install
+
+### From VSIX File
+1. Download `smeagol-vscode.vsix`
+2. Extensions → Install from VSIX
+3. Restart VS Code
+
+### From Source
+```bash
+git clone https://github.com/alvonellos/smeagol-vscode.git
+cd smeagol-vscode
+npm install
+npm run package:vsix
+code --install-extension smeagol-vscode.vsix
+```
+
+## 🎨 Supported Languages
+
+### Core Support
+- Python (completions, complexity, idioms)
+- Java (completions, complexity, idioms)
+- Rust (completions, complexity, idioms)
+- JavaScript/TypeScript (completions, complexity)
+- Shell/Bash (completions)
+- PowerShell (completions)
+- Go (complexity)
+- C/C++ (complexity)
+
+### Framework Support
+- **Django** - Python web framework
+- **Flask** - Python microframework
+- **Spring Boot** - Java enterprise
+- **NumPy/Pandas** - Python data science
+- **Tokio/Serde** - Rust async/serialization
+- **Kubernetes YAML** - Container orchestration
+- **Maven/Jenkins** - Java build tools
+- **And more...**
+
+## 🚀 Advanced Features
+
+### Custom Complexity Thresholds
+Create `.smeagol/config.json` in project root:
 
 ```json
 {
-  "smeagol.enabled": true,
-  "smeagol.highlights.enabled": true,
-  "smeagol.indent.enabled": true,
-  "smeagol.brackets.enabled": true,
-  "smeagol.rust.enabled": true,
-  "smeagol.java.enabled": true
+  "complexity": {
+    "cyclomatic": {
+      "green": 1,
+      "yellow": 6,
+      "red": 11,
+      "darkred": 20
+    }
+  }
 }
 ```
 
-### Highlights Configuration
-```json
-{
-  "smeagol.highlights.minOccurrences": 2,
-  "smeagol.highlights.minLength": 2,
-  "smeagol.highlights.maxTokens": 120,
-  "smeagol.highlights.backgroundOpacity": 0.16,
-  "smeagol.highlights.borderWidth": 1
-}
+### Idioms Analyzer
+Automatically detects non-idiomatic code:
+- 160+ rules for 14 languages
+- Framework-specific patterns
+- Auto-suggestions showing alternatives
+- Real exemplars from popular projects
+
+### Symbol Wordcloud
+Visual frequency-based word clouds:
+- Shows most-used symbols
+- Beautiful animated visualization
+- Click to jump to definition
+- Project-wide or file-level
+
+## 📚 Examples
+
+### Python Complexity
+```python
+def veryComplex():  # Cyclomatic complexity: 15
+    if a:
+        if b:
+            if c:
+                # ... many nested conditions
+                pass
 ```
+Shows 🔴 RED in Problems panel
 
-### Indentation Configuration
-```json
-{
-  "smeagol.indent.style": "both",  // "indent" | "line" | "both"
-  "smeagol.indent.indentOpacity": 0.18,
-  "smeagol.indent.lineOpacity": 0.08
-}
+### Java Spring Boot Completions
+Start typing:
+```java
+@Spring
 ```
+See: `@SpringBootApplication`, `@Service`, `@RestController`, etc.
 
-### Bracket Guides Configuration
-```json
-{
-  "smeagol.brackets.style": "bracket",  // "bracket" | "line" | "both"
-  "smeagol.brackets.lineWidth": 1,
-  "smeagol.brackets.lineOpacity": 0.5
-}
+### Kubernetes YAML Completions
+Start a manifest:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+    - name: app
+      image: myimage:latest
+      ports:
+        - containerPort: 8080
 ```
+All fields auto-complete!
 
-See [full configuration reference](#configuration-reference) below for all options.
+## 💡 Pro Tips
 
-## Architecture
+1. **Open test-complexity.py** to see complexity analysis in action
+2. **Use QUICK_REFERENCE.md** to discover all 28 commands
+3. **Press Ctrl+Space** in any file for language completions
+4. **Use Problems panel (Ctrl+Shift+M)** to see all issues
+5. **Try "Summon Symbol Wordcloud"** command for visualization
+6. **Read IDIOMS_FEATURES.md** for non-idiomatic pattern detection
 
-### Modular Design
-- **_model.js**: Data models (TokenHighlight, BracketPair, SemanticToken, FunctionDefinition)
-- **_constants.js**: All constants (color palettes, keywords, regex patterns)
-- **_api.js**: VS Code API abstractions
-- **highlights.js**: Identifier highlighting engine
-- **indent.js**: Indentation visualization
-- **functions.js**: Function/class highlighting
-- **html.js**: HTML/XML tag coloring
-- **brackets.js**: Bracket pair guides
-- **rust-highlighter.js**: Rust semantic highlighting
-- **java-highlighter.js**: Java semantic highlighting
+## 🐛 Known Limitations
 
-### Language-Specific Modules
+- Complexity analysis best effort (not 100% accurate for all languages)
+- Completions are templates, not context-aware AI
+- Idioms detection uses pattern matching, not ML
+- Large files (>10MB) may have reduced performance
 
-#### RustHighlighter
-Detects and colors:
-- Macros: `identifier!` or `#[macro]`
-- Lifetimes: `'lifetime`
-- Traits: `impl Trait` and `trait Definition`
-- Generics: `<T, U, V>`
+## 🛠️ Development
 
-#### JavaHighlighter
-Detects and colors:
-- Annotations: `@Annotation`
-- Generics: `<TypeParam>`
-- Static members: `static field/method`
-- Interfaces and enums
-
-## Performance
-
-Optimized for large files and extended sessions:
-
-- **Debounce**: Configurable 120ms refresh delay prevents excessive updates
-- **File size limits**: Skips highlighting for files >400KB or >10,000 lines
-- **Parallel execution**: All managers update concurrently
-- **Efficient regex**: Patterns compiled once and reused
-
-Configuration:
-```json
-{
-  "smeagol.performance.refreshDelayMs": 120,
-  "smeagol.performance.maxDocumentLength": 400000,
-  "smeagol.performance.maxLineCount": 10000
-}
+### Project Structure
 ```
-
-## IntelliJ Integration
-
-Perfect complement to IntelliJ IDEA's Kromatic theme:
-- Identical color palette for consistency
-- Bracket coloring matches IntelliJ's rainbow pairs
-- Java/Rust highlighting compatible with IntelliJ semantics
-- Unified look across IDE ecosystem
-
-## Development
+src/
+├── extension.js ........................ Main controller
+├── complexity-analyzer.js ............. ⭐ Auto analysis
+├── python-completion.js ............... Python completions
+├── spring-kubernetes-completion.js .... Spring + Kubernetes
+├── shell-powershell-completion.js .... Shell completions
+├── ai-helpers.js ...................... AI commands
+├── idioms-analyzer.js ................. Pattern detection
+├── idiom-extractor.js ................. Idiom engine
+├── symbol-summoner.js ................. Wordcloud
+└── [23 other modules] ................. Language support
+```
 
 ### Building
-
-```powershell
+```bash
 npm install
 npm run package:vsix
 ```
 
 ### Testing
+Press F5 to launch Extension Development Host
 
-Press F5 in VS Code to launch Extension Development Host with debugging enabled.
-
-### Project Structure
-
-```
-smeagol-vscode/
-├── src/
-│   ├── _api.js              # VS Code API wrappers
-│   ├── _constants.js        # Consolidated constants
-│   ├── _model.js            # Shared data models
-│   ├── brackets.js          # Bracket pair guides
-│   ├── config.js            # Configuration loader
-│   ├── extension.js         # Main entry point
-│   ├── functions.js         # Function highlighting
-│   ├── highlights.js        # Identifier highlighting
-│   ├── html.js              # HTML tag coloring
-│   ├── indent.js            # Indentation guides
-│   ├── java-highlighter.js  # Java semantic highlighting
-│   ├── rust-highlighter.js  # Rust semantic highlighting
-│   └── utils.js             # Utility functions
-├── themes/
-│   └── smeagol-dark-color-theme.json
-├── package.json             # Extension manifest
-└── README.md
-```
-
-## Configuration Reference
-
-### Global
-
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `smeagol.enabled` | boolean | true | Enable all Smeagol features |
-| `smeagol.performance.refreshDelayMs` | number | 120 | Debounce delay in milliseconds |
-| `smeagol.performance.maxDocumentLength` | number | 400000 | Skip files larger than this |
-| `smeagol.performance.maxLineCount` | number | 10000 | Skip files with more lines |
-
-### Highlights
-
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `smeagol.highlights.enabled` | boolean | true | Enable identifier highlighting |
-| `smeagol.highlights.colors` | array | [palette] | Color palette for highlights |
-| `smeagol.highlights.minOccurrences` | number | 2 | Min occurrences to highlight |
-| `smeagol.highlights.minLength` | number | 2 | Min token length to highlight |
-| `smeagol.highlights.maxTokens` | number | 120 | Max unique tokens per editor |
-| `smeagol.highlights.backgroundOpacity` | number | 0.16 | Background opacity (0-1) |
-| `smeagol.highlights.borderOpacity` | number | 0.65 | Border opacity (0-1) |
-| `smeagol.highlights.borderWidth` | number | 1 | Border width in pixels |
-| `smeagol.highlights.exclude` | array | [keywords] | Tokens never to highlight |
-| `smeagol.highlights.ignoreLanguages` | array | [] | Language IDs to skip |
-
-### Indentation
-
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `smeagol.indent.enabled` | boolean | true | Enable indent guides |
-| `smeagol.indent.colors` | array | [palette] | Color palette |
-| `smeagol.indent.style` | string | "both" | "indent", "line", or "both" |
-| `smeagol.indent.indentOpacity` | number | 0.18 | Indent block opacity |
-| `smeagol.indent.lineOpacity` | number | 0.08 | Full-line opacity |
-
-### Functions
-
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `smeagol.functions.enabled` | boolean | true | Enable function highlighting |
-| `smeagol.functions.highlightStyle` | string | "line" | "line" or "name" |
-| `smeagol.functions.requireDefinitionAndCall` | boolean | true | Require definition + call |
-| `smeagol.functions.minOccurrences` | number | 2 | Min occurrences |
-| `smeagol.functions.maxSymbols` | number | 200 | Max symbols per file |
-
-### HTML/XML
-
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `smeagol.html.enabled` | boolean | true | Enable HTML tag coloring |
-| `smeagol.html.delimiterOpacity` | number | 0.7 | Delimiter opacity |
-| `smeagol.html.includeLanguages` | array | [...] | Languages to enable for |
-
-### Brackets
-
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `smeagol.brackets.enabled` | boolean | true | Enable bracket guides |
-| `smeagol.brackets.style` | string | "bracket" | "bracket", "line", or "both" |
-| `smeagol.brackets.lineWidth` | number | 1 | Border width in pixels |
-| `smeagol.brackets.lineOpacity` | number | 0.5 | Border opacity (0-1) |
-
-### Language-Specific
-
-| Setting | Type | Default | Description |
-|---------|------|---------|-------------|
-| `smeagol.rust.enabled` | boolean | true | Enable Rust highlighting |
-| `smeagol.java.enabled` | boolean | true | Enable Java highlighting |
-
-## Known Limitations
-
-- Bracket detection uses greedy matching (may match in comments)
-- Language detection based on file extension
-- Large files have reduced highlight accuracy
-- Some regex patterns may not handle all edge cases
-
-## Roadmap
-
-See [FUTURE.md](FUTURE.md) for planned features:
-- Enhanced semantic token type awareness
-- Code complexity indicators
-- Light theme variant
-- Accessibility modes
-- Performance metrics dashboard
-
-## Security
-
-- Uses only VS Code APIs and local document text
-- No network requests or child processes
-- No telemetry or data collection
-- See SECURITY.md for detailed audit
-
-## License
+## 📄 License
 
 MIT
 
-## Author
+## 👤 Author
 
-Alex Alvonellos  
+Alexa Nellos  
 [@alvonellos](https://github.com/alvonellos)
 
 ---
 
-**Enjoy intelligent code visualization with Smeagol!** 🧙‍♂️
+## 🎉 Version History
+
+| Version | Date | Highlight |
+|---------|------|-----------|
+| **0.2.2** | Jan 2026 | 470+ completions, AI helpers |
+| **0.2.1** | Jan 2026 | Idioms analyzer, 9 exemplars |
+| **0.2.0** | Dec 2025 | Complexity analysis, 14 languages |
+
+---
+
+**My precious... all your code analyzed in one place!** 🧙‍♂️
+
+📖 **[Read QUICK_START.md now!](QUICK_START.md)**
