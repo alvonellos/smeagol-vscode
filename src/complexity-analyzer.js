@@ -1,11 +1,12 @@
 "use strict";
 
 const vscode = require("vscode");
+const { ConfigLoader } = require("./config-loader");
 
 /**
  * Code Complexity Analyzer
  * Analyzes cyclomatic complexity, branch paths, and code metrics
- * OPTIMIZED with pre-compiled regex patterns for 10-20% performance improvement
+ * OPTIMIZED with pre-compiled regex patterns and configurable thresholds
  */
 
 // Pre-compiled regex patterns (compiled once at module load time, not on every call)
@@ -32,10 +33,20 @@ const PRECOMPILED_REGEX = {
 };
 
 class ComplexityAnalyzer {
-  constructor() {
+  constructor(workspaceRoot = null) {
     this.diagnosticsCollection = vscode.languages.createDiagnosticCollection("smeagol-complexity");
     // Cache compiled regex patterns for specific keywords
     this.keywordRegexCache = new Map();
+    
+    // Load configuration
+    this.configLoader = new ConfigLoader();
+    if (workspaceRoot) {
+      this.configLoader.loadConfig(workspaceRoot);
+      // Watch for config changes
+      this.configWatcher = this.configLoader.watchConfig(() => {
+        // Config changed, analyzers will use updated thresholds on next run
+      });
+    }
   }
 
   /**
@@ -46,6 +57,12 @@ class ComplexityAnalyzer {
     const text = document.getText();
     const diagnostics = [];
 
+    // Get language-specific thresholds from config
+    const languageId = document.languageId;
+    const complexityWarning = this.configLoader.getComplexityThreshold(languageId, "warning");
+    const complexityError = this.configLoader.getComplexityThreshold(languageId, "error");
+    const branchThreshold = this.configLoader.getBranchThreshold(languageId);
+
     // Parse all functions/methods
     const functions = this.extractFunctions(text, document);
 
@@ -53,13 +70,13 @@ class ComplexityAnalyzer {
       const complexity = this.calculateCyclomaticComplexity(func.code);
       const branches = this.analyzeBranches(func.code);
 
-      // Warn if complexity is high
-      if (complexity > 10) {
+      // Warn if complexity exceeds warning threshold
+      if (complexity > complexityWarning) {
         const range = new vscode.Range(func.startLine, 0, func.endLine, 0);
-        const severity = complexity > 20 ? vscode.DiagnosticSeverity.Error : vscode.DiagnosticSeverity.Warning;
+        const severity = complexity > complexityError ? vscode.DiagnosticSeverity.Error : vscode.DiagnosticSeverity.Warning;
         const diagnostic = new vscode.Diagnostic(
           range,
-          `High cyclomatic complexity: ${complexity} (> 10 recommended). Branch paths: ${branches.count}`,
+          `High cyclomatic complexity: ${complexity} (threshold: ${complexityWarning}). Branch paths: ${branches.count}`,
           severity
         );
         diagnostic.source = "Smeagol Complexity";
@@ -68,7 +85,7 @@ class ComplexityAnalyzer {
       }
 
       // Warn if too many branch paths
-      if (branches.count > 8) {
+      if (branches.count > branchThreshold) {
         const range = new vscode.Range(func.startLine, 0, func.startLine, 100);
         const diagnostic = new vscode.Diagnostic(
           range,
@@ -258,6 +275,10 @@ class ComplexityAnalyzer {
 
   dispose() {
     this.diagnosticsCollection.dispose();
+    if (this.configWatcher) {
+      this.configWatcher();
+    }
+    this.configLoader.closeWatchers();
   }
 }
 

@@ -1,0 +1,85 @@
+{
+  "complexity": {
+    "warning": 10,
+    "error": 15
+  },
+  "branches": {
+    "maxPaths": 8,
+    "warnAbove": 8
+  },
+  "languages": {
+    "javascript": {
+      "complexity": {
+        "warning": 12,
+        "error": 18
+      },
+      "branches": {
+        "maxPaths": 10,
+        "warnAbove": 10
+      }
+    },
+    "python": {
+      "complexity": {
+        "warning": 10,
+        "error": 15
+      },
+      "branches": {
+        "maxPaths": 8,
+        "warnAbove": 8
+      }
+    },
+    "java": {
+      "complexity": {
+        "warning": 15,
+        "error": 20
+      },
+      "branches": {
+        "maxPaths": 12,
+        "warnAbove": 12
+      }
+    },
+    "rust": {
+      "complexity": {
+        "warning": 12,
+        "error": 18
+      },
+      "branches": {
+        "maxPaths": 10,
+        "warnAbove": 10
+      }
+    },
+    "go": {
+      "complexity": {
+        "warning": 10,
+        "error": 15
+      },
+      "branches": {
+        "maxPaths": 8,
+        "warnAbove": 8
+      }
+    }
+  },
+  "patterns": {
+    "include": [
+      "**/*.js",
+      "**/*.py",
+      "**/*.java",
+      "**/*.rs",
+      "**/*.go",
+      "**/*.cpp",
+      "**/*.h"
+    ],
+    "exclude": [
+      "node_modules/**",
+      "*.test.js",
+      "*.spec.js",
+      "dist/**",
+      "build/**"
+    ]
+  },
+  "performance": {
+    "maxFileSize": 10485760,
+    "cacheEnabled": true,
+    "cacheTtl": 300000
+  }
+}
