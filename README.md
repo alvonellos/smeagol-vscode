@@ -1,10 +1,10 @@
-# 🧙‍♂️ Smeagol VS Code Extension v0.2.2
+# 🧙‍♂️ Smeagol VS Code Extension v0.2.3
 
-**Polyglot IDE with Automatic Code Complexity Analysis**
+**Polyglot IDE with Automatic Code Complexity Analysis & Configurable Thresholds**
 
-Smeagol provides intelligent code analysis, 470+ smart completions for 14 languages, and automatic complexity detection—all without needing commands.
+Smeagol provides intelligent code analysis, 470+ smart completions for 14 languages, and automatic complexity detection—all without needing commands. Now with custom threshold configuration!
 
-## ⭐ Star Feature: Automatic Complexity Analysis
+## ⭐ Star Feature: Automatic Complexity Analysis with Custom Thresholds
 
 No commands needed. When you open ANY code file:
 
@@ -13,7 +13,7 @@ FILE OPENS
     ↓
 Smeagol analyzes functions automatically
     ↓
-Calculates cyclomatic complexity
+Calculates cyclomatic complexity (uses your config thresholds!)
     ↓
 Tracks exponential branch paths
     ↓
@@ -25,10 +25,13 @@ Shows in Problems panel (Ctrl+Shift+M)
 🔴🔴 DARK RED (20+) → Refactor NOW
 ```
 
+**NEW**: Customize thresholds in `.smeagol/config.json` - per-language support!
+
 ## 🎯 What's Included
 
 ### Core Features
 - **Automatic Complexity Analysis** - Runs on every file, no commands
+- **Custom Thresholds** - Configure warning/error levels per-language
 - **Cyclomatic Complexity** - Measure function complexity
 - **Branch Path Tracking** - Exponential growth visualization
 - **14-Language Support** - Python, Java, Rust, Go, JavaScript, Shell, and more
@@ -98,12 +101,13 @@ Done! 🎉 You've tested all major features!
 Start with one of these:
 
 - **[QUICK_START.md](QUICK_START.md)** - 5-minute walkthrough
+- **[CONFIGURATION.md](CONFIGURATION.md)** - Custom complexity thresholds (NEW!)
 - **[RUN_GUIDE.md](RUN_GUIDE.md)** - Step-by-step testing
 - **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** - All 28 commands cheat sheet
-- **[ADVANCED_FEATURES.md](ADVANCED_FEATURES.md)** - Complexity thresholds, deep dive
+- **[ADVANCED_FEATURES.md](ADVANCED_FEATURES.md)** - Complexity analysis, deep dive
 - **[ARCHITECTURE.md](ARCHITECTURE.md)** - How it works internally
 - **[IDIOMS_FEATURES.md](IDIOMS_FEATURES.md)** - Code idioms analyzer
-- **[RELEASE_NOTES_V0.2.2.md](RELEASE_NOTES_V0.2.2.md)** - What's new in this version
+- **[RELEASE_NOTES_V0.2.2.md](RELEASE_NOTES_V0.2.2.md)** - Previous version features
 
 ## ⚡ 28 Registered Commands
 
