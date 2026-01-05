@@ -29,6 +29,8 @@ const { AiDslCompiler } = require("./ai-dsl-compiler");
 const { ComplexityAnalyzer } = require("./complexity-analyzer");
 const { SymbolSummoner } = require("./symbol-summoner");
 const { IdiomsAnalyzer } = require("./idioms-analyzer");
+const { CodePatternsAnalyzer } = require("./code-patterns-analyzer");
+const { SuggestionEngine } = require("./suggestion-engine");
 
 class SmeagolController {
   constructor(context) {
@@ -62,6 +64,8 @@ class SmeagolController {
     this.complexityAnalyzer = new ComplexityAnalyzer();
     this.symbolSummoner = new SymbolSummoner();
     this.idiomsAnalyzer = new IdiomsAnalyzer();
+    this.codePatterns = new CodePatternsAnalyzer();
+    this.suggestionEngine = new SuggestionEngine();
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -236,6 +240,48 @@ class SmeagolController {
         const stats = this.idiomsAnalyzer.getStatistics();
         vscode.window.showInformationMessage(
           `✓ Idioms Analysis: ${stats.totalRules} rules across ${stats.totalLanguages} languages`
+        );
+      }),
+      // AI Code Suggestions command
+      vscode.commands.registerCommand("smeagol.getAISuggestions", () => {
+        const editor = vscode.window.activeTextEditor;
+        if (!editor) {
+          vscode.window.showErrorMessage("No file open");
+          return;
+        }
+
+        const document = editor.document;
+        const code = document.getText();
+        const language = document.languageId;
+
+        // Analyze patterns
+        const patterns = this.codePatterns.analyzeCode(code, language);
+        
+        if (patterns.length === 0) {
+          vscode.window.showInformationMessage("✅ No refactoring suggestions needed!");
+          return;
+        }
+
+        // Generate suggestions
+        const suggestions = this.suggestionEngine.generateSuggestions(patterns);
+        
+        // Create output channel and display suggestions
+        const outputChannel = vscode.window.createOutputChannel("Smeagol: AI Suggestions");
+        outputChannel.clear();
+        
+        outputChannel.append(this.suggestionEngine.formatSuggestions(suggestions));
+        outputChannel.append("\n\n");
+        
+        // Show detailed suggestions for top 3
+        suggestions.slice(0, 3).forEach((suggestion, index) => {
+          outputChannel.append(`\n\n${'='.repeat(60)}\n`);
+          outputChannel.append(`Suggestion ${index + 1}: ${suggestion.title}\n`);
+          outputChannel.append(this.suggestionEngine.formatSuggestion(suggestion));
+        });
+
+        outputChannel.show();
+        vscode.window.showInformationMessage(
+          `✓ Found ${patterns.length} pattern(s) to refactor. Check Smeagol: AI Suggestions panel.`
         );
       })
     );

@@ -164,6 +164,11 @@
         "category": "Smeagol / Analysis"
       },
       {
+        "command": "smeagol.getAISuggestions",
+        "title": "Get AI Code Refactoring Suggestions",
+        "category": "Smeagol / Analysis"
+      },
+      {
         "command": "smeagol.summonSymbols",
         "title": "Summon Symbol Wordcloud",
         "category": "Smeagol / Visualization"
