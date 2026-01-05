@@ -47,6 +47,31 @@ Smeagol analyzes your code for cyclomatic complexity and tracks all possible exe
 2. **Command Palette**: `Ctrl+Shift+P`
 3. Type: **"Analyze Code Complexity & Branch Paths"**
 
+### Customizing Thresholds
+
+By default, Smeagol warns when cyclomatic complexity exceeds 10. You can customize these thresholds:
+
+1. Create `.smeagol/config.json` in your project root
+2. Set per-language thresholds
+3. Changes are automatically detected and applied
+
+**Example configuration**:
+```json
+{
+  "complexity": {
+    "warning": 8,
+    "error": 12
+  },
+  "languages": {
+    "python": {
+      "complexity": { "warning": 6, "error": 10 }
+    }
+  }
+}
+```
+
+See [CONFIGURATION.md](CONFIGURATION.md) for complete options.
+
 ### What It Measures
 
 #### Cyclomatic Complexity
