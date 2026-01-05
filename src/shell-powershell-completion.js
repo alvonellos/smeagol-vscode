@@ -1,13 +1,16 @@
 "use strict";
 
 const vscode = require("vscode");
+const { CompletionCache } = require("./completion-cache");
 
 /**
  * Shell/Bash Completion Provider
+ * Optimized with caching for high performance
  */
 class ShellCompletionProvider {
   constructor() {
     this.completionItems = [];
+    this.cache = new CompletionCache(500, 5 * 60 * 1000); // 500 items, 5min TTL
     this.initialize();
   }
 
@@ -102,20 +105,32 @@ class ShellCompletionProvider {
   }
 
   provideCompletionItems(document, position, token, context) {
+    const docKey = `${document.uri.fsPath}:${position.line}:${position.character}`;
+    const cached = this.cache.get(docKey);
+    if (cached) {
+      return cached;
+    }
+    this.cache.set(docKey, this.completionItems);
     return this.completionItems;
   }
 
   resolveCompletionItem(item, token) {
     return item;
   }
+
+  getCacheStats() {
+    return this.cache.getStats();
+  }
 }
 
 /**
  * PowerShell Completion Provider
+ * Optimized with caching for high performance
  */
 class PowerShellCompletionProvider {
   constructor() {
     this.completionItems = [];
+    this.cache = new CompletionCache(500, 5 * 60 * 1000); // 500 items, 5min TTL
     this.initialize();
   }
 
@@ -188,11 +203,21 @@ class PowerShellCompletionProvider {
   }
 
   provideCompletionItems(document, position, token, context) {
+    const docKey = `${document.uri.fsPath}:${position.line}:${position.character}`;
+    const cached = this.cache.get(docKey);
+    if (cached) {
+      return cached;
+    }
+    this.cache.set(docKey, this.completionItems);
     return this.completionItems;
   }
 
   resolveCompletionItem(item, token) {
     return item;
+  }
+
+  getCacheStats() {
+    return this.cache.getStats();
   }
 }
 

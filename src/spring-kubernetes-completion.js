@@ -1,14 +1,17 @@
 "use strict";
 
 const vscode = require("vscode");
+const { CompletionCache } = require("./completion-cache");
 
 /**
  * Spring Boot Completion Provider
  * IntelliJ-like completions for Spring Boot framework
+ * Optimized with caching for high performance
  */
 class SpringBootCompletionProvider {
   constructor() {
     this.completionItems = [];
+    this.cache = new CompletionCache(500, 5 * 60 * 1000); // 500 items, 5min TTL
     this.initialize();
   }
 
@@ -90,21 +93,33 @@ class SpringBootCompletionProvider {
   }
 
   provideCompletionItems(document, position, token, context) {
+    const docKey = `${document.uri.fsPath}:${position.line}:${position.character}`;
+    const cached = this.cache.get(docKey);
+    if (cached) {
+      return cached;
+    }
+    this.cache.set(docKey, this.completionItems);
     return this.completionItems;
   }
 
   resolveCompletionItem(item, token) {
     return item;
   }
+
+  getCacheStats() {
+    return this.cache.getStats();
+  }
 }
 
 /**
  * Kubernetes Completion Provider
  * YAML completions for Kubernetes manifests
+ * Optimized with caching for high performance
  */
 class KubernetesCompletionProvider {
   constructor() {
     this.completionItems = [];
+    this.cache = new CompletionCache(500, 5 * 60 * 1000); // 500 items, 5min TTL
     this.initialize();
   }
 
@@ -201,11 +216,21 @@ class KubernetesCompletionProvider {
   }
 
   provideCompletionItems(document, position, token, context) {
+    const docKey = `${document.uri.fsPath}:${position.line}:${position.character}`;
+    const cached = this.cache.get(docKey);
+    if (cached) {
+      return cached;
+    }
+    this.cache.set(docKey, this.completionItems);
     return this.completionItems;
   }
 
   resolveCompletionItem(item, token) {
     return item;
+  }
+
+  getCacheStats() {
+    return this.cache.getStats();
   }
 }
 
