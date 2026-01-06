@@ -280,9 +280,11 @@ class AutoItHighlighter {
           }
         }
 
-        // Built-in functions
+        // Built-in functions - Use pre-compiled escape pattern
         for (const func of autoitFunctions) {
-          const regex = new RegExp(`\\b${func}\\b`, 'gi');
+          // Pre-escape special regex characters in function names
+          const escapedFunc = func.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          const regex = new RegExp(`\\b${escapedFunc}\\b`, 'gi');
           let funcMatch;
           while ((funcMatch = regex.exec(processText)) !== null) {
             const startPos = new vscode.Position(line, funcMatch.index);
@@ -291,7 +293,7 @@ class AutoItHighlighter {
           }
         }
 
-        // Keywords
+        // Keywords - Single pre-compiled regex for all keywords
         let keywordMatch;
         const keywordRegexLocal = /\b(If|Then|Else|ElseIf|EndIf|While|WEnd|Do|Until|For|To|Step|In|Next|Switch|Case|Default|EndSwitch|Func|Return|EndFunc|Local|Global|Dim|Static|Const|Enum|EndEnum|Exit|ContinueLoop|ExitLoop|ByRef|ByVal|As|EndWith|With|Select|EndSelect)\b/gi;
         while ((keywordMatch = keywordRegexLocal.exec(processText)) !== null) {

@@ -133,7 +133,17 @@ class IdiomsAnalyzer {
 
     for (const rule of rules) {
       try {
-        const matches = text.matchAll(new RegExp(rule.pattern, "gm"));
+        // Cache compiled regex patterns to avoid recompilation
+        if (!rule._compiledRegex) {
+          try {
+            rule._compiledRegex = new RegExp(rule.pattern, "gm");
+          } catch (regexError) {
+            console.warn(`Invalid regex pattern for rule "${rule.id}": ${regexError.message}`);
+            continue;
+          }
+        }
+        
+        const matches = text.matchAll(rule._compiledRegex);
         
         for (const match of matches) {
           const startPos = document.positionAt(match.index);
@@ -158,6 +168,7 @@ class IdiomsAnalyzer {
           diagnostics.push(diagnostic);
         }
       } catch (e) {
+        console.error(`Error analyzing idioms for "${language}": ${e.message}`);
         // Skip invalid regexes
       }
     }

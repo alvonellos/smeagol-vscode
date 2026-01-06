@@ -16,10 +16,12 @@ class HtmlManager {
     this.delimiterDecorations = [];
     this.styleKey = "";
     this.updateToken = 0;
+    this.regexCache = new Map(); // Cache compiled regex patterns for tagged templates
   }
 
   reset() {
     this.styleKey = "";
+    this.regexCache.clear();
     this.dispose();
   }
 
@@ -216,7 +218,20 @@ function getHtmlSegments(doc, text, cfg) {
   }
 
   const pattern = tagNames.map(escapeRegExp).join("|");
-  const regex = new RegExp("(?:^|[^A-Za-z0-9_$\\.])(" + pattern + ")\\s*`", "g");
+  const cacheKey = pattern;
+  
+  // Use cached regex to avoid recompilation
+  let regex = this.regexCache.get(cacheKey);
+  if (!regex) {
+    try {
+      regex = new RegExp("(?:^|[^A-Za-z0-9_$\\.])(" + pattern + ")\\s*`", "g");
+      this.regexCache.set(cacheKey, regex);
+    } catch (e) {
+      console.warn(`Failed to compile tagged template regex: ${e.message}`);
+      return [];
+    }
+  }
+  
   const segments = [];
   let match;
 

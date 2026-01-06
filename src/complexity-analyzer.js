@@ -2,11 +2,13 @@
 
 const vscode = require("vscode");
 const { ConfigLoader } = require("./config-loader");
+const { PerformanceProfiler } = require("./performance-profiler");
 
 /**
  * Code Complexity Analyzer
  * Analyzes cyclomatic complexity, branch paths, and code metrics
  * OPTIMIZED with pre-compiled regex patterns and configurable thresholds
+ * Includes performance metrics tracking
  */
 
 // Pre-compiled regex patterns (compiled once at module load time, not on every call)
@@ -38,6 +40,9 @@ class ComplexityAnalyzer {
     // Cache compiled regex patterns for specific keywords
     this.keywordRegexCache = new Map();
     
+    // Performance profiler for metrics
+    this.profiler = new PerformanceProfiler("complexity-analysis");
+    
     // Load configuration
     this.configLoader = new ConfigLoader();
     if (workspaceRoot) {
@@ -53,6 +58,9 @@ class ComplexityAnalyzer {
    * Analyze document for complexity metrics
    */
   analyzeDocument(editor) {
+    // Start performance measurement
+    this.profiler.startTimer();
+    
     const document = editor.document;
     const text = document.getText();
     const diagnostics = [];
@@ -98,6 +106,16 @@ class ComplexityAnalyzer {
     });
 
     this.diagnosticsCollection.set(document.uri, diagnostics);
+    
+    // Record performance metrics
+    const elapsed = this.profiler.endTimer();
+    this.profiler.recordMetric("diagnostics_count", diagnostics.length);
+    this.profiler.recordMetric("functions_analyzed", functions.length);
+    
+    // Record cache metrics if available
+    if (this.keywordRegexCache.size > 0) {
+      this.profiler.recordMetric("keyword_cache_size", this.keywordRegexCache.size);
+    }
   }
 
   /**

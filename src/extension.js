@@ -16,10 +16,16 @@ const { AutoItCompletionProvider } = require("./autoit-completion");
 const { RustCompletionProvider } = require("./rust-completion");
 const { LombokCompletionProvider } = require("./lombok-completion");
 const { PythonCompletionProvider } = require("./python-completion");
+const { PythonCompletionProvider: PythonCompletionProviderEnhanced } = require("./python-completion-enhanced");
 const { SpringBootCompletionProvider, KubernetesCompletionProvider } = require("./spring-kubernetes-completion");
 const { ShellCompletionProvider, PowerShellCompletionProvider } = require("./shell-powershell-completion");
 const { MavenCompletionProvider, GroovyCompletionProvider, JenkinsCompletionProvider } = require("./maven-groovy-jenkins-completion");
 const { AplCompletionProvider } = require("./apl-completion");
+const { GoCompletionProvider } = require("./go-completion");
+const { YamlCompletionProvider } = require("./yaml-completion");
+const { KotlinCompletionProvider } = require("./kotlin-completion");
+const { TypeScriptCompletionProvider } = require("./typescript-completion");
+const { CSharpCompletionProvider } = require("./csharp-completion");
 const { AiHelpersModule } = require("./ai-helpers");
 const { ConcordanceSystem } = require("./concordance-system");
 const { SmeagolTools } = require("./smeagol-tools");
@@ -57,6 +63,12 @@ class SmeagolController {
     this.groovyCompletionProvider = new GroovyCompletionProvider();
     this.jenkinsCompletionProvider = new JenkinsCompletionProvider();
     this.aplCompletionProvider = new AplCompletionProvider();
+    this.goCompletionProvider = new GoCompletionProvider();
+    this.yamlCompletionProvider = new YamlCompletionProvider();
+    this.kotlinCompletionProvider = new KotlinCompletionProvider();
+    this.pythonCompletionProviderEnhanced = new PythonCompletionProviderEnhanced();
+    this.typeScriptCompletionProvider = new TypeScriptCompletionProvider();
+    this.csharpCompletionProvider = new CSharpCompletionProvider();
     this.aiHelpersModule = new AiHelpersModule(context);
     this.smeagolTools = new SmeagolTools();
     this.sonarQubeConnector = new SonarQubeConnector();
@@ -189,6 +201,51 @@ class SmeagolController {
         '¬', '-', '+', '×', '÷', '⌈', '⌊', '|', '⋆', '⍟', '○', '!', '?',
         '=', '≠', '<', '>', '≤', '≥',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+      ),
+      // Go completions - We knows the precious Go stdlib and concurrency patterns!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'go', scheme: 'file' },
+        this.goCompletionProvider,
+        'f', 'i', 'n', 's', 'c', 'h', 'e', 't', 'b', 'm', 'o', 'r', 'j', 'p', 'u', 'd', 'g', 'k', 'l', 'v', 'w', 'x', 'y', 'z',
+        'F', 'I', 'N', 'S', 'C', 'H', 'E', 'T', 'B', 'M', 'O', 'R', 'J', 'P', 'U', 'D', 'G', 'K', 'L', 'V', 'W', 'X', 'Y', 'Z'
+      ),
+      // YAML completions - We knows Docker Compose, Kubernetes, and GitHub Actions!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'yaml', scheme: 'file' },
+        this.yamlCompletionProvider,
+        'v', 's', 'd', 'i', 'n', 'c', 'e', 't', 'p', 'r', 'a', 'm', 'l', 'j', 'o', 'w',
+        'V', 'S', 'D', 'I', 'N', 'C', 'E', 'T', 'P', 'R', 'A', 'M', 'L', 'J', 'O', 'W'
+      ),
+      // Kotlin completions - Coroutines, stdlib, Android, extension functions!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'kotlin', scheme: 'file' },
+        this.kotlinCompletionProvider,
+        'f', 'c', 'l', 'd', 'e', 'w', 'r', 'v', 's', 'i', 'n', 'p', 't', 'b', 'o', 'a', 'm', 'k', 'g', 'u', 'x', 'y', 'z',
+        'F', 'C', 'L', 'D', 'E', 'W', 'R', 'V', 'S', 'I', 'N', 'P', 'T', 'B', 'O', 'A', 'M', 'K', 'G', 'U', 'X', 'Y', 'Z'
+      ),
+      // Python Enhanced completions - 100+ items, stdlib, async, decorators, frameworks!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'python', scheme: 'file' },
+        this.pythonCompletionProviderEnhanced,
+        'i', 'f', 'c', 'd', 'a', 'l', 'r', 'w', 'e', 'b', 's', 't', 'o', 'm', 'n', 'p', 'k', 'g', 'v', 'x', 'y', 'z',
+        'I', 'F', 'C', 'D', 'A', 'L', 'R', 'W', 'E', 'B', 'S', 'T', 'O', 'M', 'N', 'P', 'K', 'G', 'V', 'X', 'Y', 'Z',
+        '@', '.'
+      ),
+      // TypeScript completions - Types, generics, async, decorators, stdlib!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'typescript', scheme: 'file' },
+        this.typeScriptCompletionProvider,
+        'i', 't', 'e', 'n', 'c', 'a', 's', 'p', 'r', 'd', 'l', 'g', 'f', 'v', 'b', 'o', 'w', 'k', 'm', 'x', 'y', 'z',
+        'I', 'T', 'E', 'N', 'C', 'A', 'S', 'P', 'R', 'D', 'L', 'G', 'F', 'V', 'B', 'O', 'W', 'K', 'M', 'X', 'Y', 'Z',
+        '<', '.'
+      ),
+      // C# completions - LINQ, async/await, attributes, .NET stdlib!
+      vscode.languages.registerCompletionItemProvider(
+        { language: 'csharp', scheme: 'file' },
+        this.csharpCompletionProvider,
+        'c', 's', 'i', 'e', 'n', 'a', 't', 'd', 'f', 'p', 'r', 'o', 'l', 'g', 'b', 'w', 'k', 'm', 'v', 'u', 'x', 'y', 'z',
+        'C', 'S', 'I', 'E', 'N', 'A', 'T', 'D', 'F', 'P', 'R', 'O', 'L', 'G', 'B', 'W', 'K', 'M', 'V', 'U', 'X', 'Y', 'Z',
+        '<', '.', '['
       )
     );
 

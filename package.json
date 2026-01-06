@@ -2,8 +2,9 @@
   "name": "smeagol-vscode",
   "displayName": "Smeagol VS Code",
   "description": "Polyglot IDE: 10+ language completions, semantic highlighting, AI DSL compiler, SonarQube integration, project concordance system.",
-  "version": "0.2.0",
+  "version": "0.2.3",
   "publisher": "alexa",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/alvonellos/smeagol-vscode"
@@ -50,7 +51,7 @@
       {
         "label": "Kromatic Dark (Smeagol)",
         "uiTheme": "vs-dark",
-        "path": "./themes/kromatic-dark-color-theme.json"
+        "path": "./themes/smeagol-dark-color-theme.json"
       }
     ],
     "configurationDefaults": {
@@ -578,5 +579,8 @@
         }
       }
     }
+  },
+  "devDependencies": {
+    "sharp": "^0.34.5"
   }
 }

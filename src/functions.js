@@ -18,10 +18,12 @@ class FunctionManager {
     this.decorations = [];
     this.styleKey = "";
     this.updateToken = 0;
+    this.regexCache = new Map(); // Cache compiled regex patterns
   }
 
   reset() {
     this.styleKey = "";
+    this.regexCache.clear();
     this.dispose();
   }
 
@@ -115,7 +117,13 @@ class FunctionManager {
       return;
     }
 
-    const regex = new RegExp("\\b(" + pattern + ")\\b", "g");
+    // Use cached regex to avoid recompilation
+    let regex = this.regexCache.get(pattern);
+    if (!regex) {
+      regex = new RegExp("\\b(" + pattern + ")\\b", "g");
+      this.regexCache.set(pattern, regex);
+    }
+    
     const ranges = getVisibleRanges(editor);
     const stats = new Map();
 
