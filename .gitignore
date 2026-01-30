@@ -1,0 +1,38 @@
+# Temporary Markdown Files
+# Label work-in-progress files with tmp.md pattern for safe cleanup
+# Examples: tmp.analysis.md, tmp.report.md, docs/tmp.notes.md
+tmp*.md
+docs/tmp*.md
+
+# Node modules
+node_modules/
+package-lock.json
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.vsix
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.idea/
+.project
+.settings/
+*.swp
+*.swo
+*~
+
+# Development
+.env
+.env.local

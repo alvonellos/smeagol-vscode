@@ -41,13 +41,52 @@ docs/
 - Session notes at root
 - Multiple docs scattered at root level
 
+### Temporary/Draft Files Convention
+
+**All temporary, draft, or work-in-progress markdown files MUST use the `tmp.md` suffix pattern.**
+
+#### Pattern: `tmp.{purpose}.md`
+
+Examples:
+- `tmp.analysis.md` - Temporary analysis or research
+- `tmp.report.md` - Draft report being worked on
+- `tmp.notes.md` - Session notes in progress
+- `tmp.refactor-plan.md` - Planning document not finalized
+- `tmp.investigation.md` - Investigation notes
+
+#### Rules for Temporary Files
+
+1. **Naming**: All temporary files follow pattern `tmp.*.md`
+2. **Location**: Can be at root or in `docs/` (use `docs/` for documentation-related)
+3. **Cleanup**: Delete or finalize before committing
+4. **Purpose**: Clear intention that these are ephemeral
+5. **Lifecycle**:
+   - Create with `tmp.` prefix while working
+   - Rename to permanent name when finalized (remove `tmp.` prefix)
+   - Delete if no longer needed
+   - Never commit temporary files
+
+#### Examples
+
+✅ **DO - Temporary Files (Delete Before Commit)**:
+- `tmp.refactor-analysis.md` - Work in progress
+- `docs/tmp.new-feature-plan.md` - Draft guide being developed
+- `tmp.session-notes.md` - Session working notes
+
+❌ **DON'T - Commit Without Finalizing**:
+- `tmp.final-report.md` - Remove `tmp.` before commit
+- `tmp.analysis.md` left in repo - Delete or finalize
+- `docs/tmp.guide.md` in production - Rename to `docs/GUIDE.md`
+
 ### Root Level (Exception)
 
-Only these files at root:
+Only these permanent files at root:
 - `README.md` - Main entry point (links to docs/)
 - `COMPLETION_SUMMARY.md` - Session completion status
 - `LICENSE` - License file
 - `package.json` - Project metadata
+- `.gitignore` - Git configuration
+- `package-lock.json` - Dependency lock
 - `icon.png` - Extension icon
 - `smeagol-vscode.vsix` - Deployment package
 

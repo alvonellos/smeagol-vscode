@@ -74,9 +74,13 @@ All project documentation is organized in the `docs/` directory:
 | [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) | **How to contribute and extend Smeagol** |
 | [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) | **Problem solving and FAQ** |
 | [docs/SAMPLE_DATABASES.md](docs/SAMPLE_DATABASES.md) | **Code examples and data structures** |
+| [docs/DOCUMENTATION_DIRECTIVE.md](docs/DOCUMENTATION_DIRECTIVE.md) | **Rules for creating and organizing documentation** |
+| [docs/TEMPORARY_FILES_CONVENTION.md](docs/TEMPORARY_FILES_CONVENTION.md) | **How to label and manage temporary markdown files** |
 | [docs/archive/](docs/archive/) | **Historical session notes and references** |
 
-> 💡 **Contributing tip**: All new documentation should go in `docs/` directory.
+> 💡 **Contributing tips**:
+> - All new documentation goes in `docs/` directory → See [DOCUMENTATION_DIRECTIVE.md](docs/DOCUMENTATION_DIRECTIVE.md)
+> - Use `tmp.{purpose}.md` for work-in-progress files → See [TEMPORARY_FILES_CONVENTION.md](docs/TEMPORARY_FILES_CONVENTION.md)
 
 ---
 
