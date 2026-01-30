@@ -37,6 +37,16 @@ const { SymbolSummoner } = require("./symbol-summoner");
 const { IdiomsAnalyzer } = require("./idioms-analyzer");
 const { CodePatternsAnalyzer } = require("./code-patterns-analyzer");
 const { SuggestionEngine } = require("./suggestion-engine");
+const { NeuroUI } = require("./neurodivergent-ui-system");
+const { QuokkaEngine } = require("./quokka-engine");
+const { ORMGenerator } = require("./orm-generator");
+const { DiagramPreviewSystem } = require("./diagram-preview-system");
+const { MavenHelper } = require("./maven-helper");
+const { GoctlGenerator } = require("./goctl-generator");
+const { AdvancedRustAnalyzer } = require("./advanced-rust-analyzer");
+const { BashShellMakefileCompletion } = require("./bash-shell-makefile-completion");
+const { EnhancedAutoItConfigAnalyzer } = require("./enhanced-autoit-config-analyzer");
+const { ConversationLogger } = require("./conversation-logger");
 
 class SmeagolController {
   constructor(context) {
@@ -78,6 +88,16 @@ class SmeagolController {
     this.idiomsAnalyzer = new IdiomsAnalyzer();
     this.codePatterns = new CodePatternsAnalyzer();
     this.suggestionEngine = new SuggestionEngine();
+    this.neuroUI = new NeuroUI();
+    this.quokkaEngine = new QuokkaEngine();
+    this.ormGenerator = new ORMGenerator();
+    this.diagramPreview = new DiagramPreviewSystem();
+    this.mavenHelper = new MavenHelper();
+    this.goctlGenerator = new GoctlGenerator();
+    this.rustAnalyzer = new AdvancedRustAnalyzer();
+    this.bashCompletion = new BashShellMakefileCompletion();
+    this.autoitAnalyzer = new EnhancedAutoItConfigAnalyzer();
+    this.conversationLogger = new ConversationLogger(context.extensionPath);
     this.updateTimer = null;
     this.updateId = 0;
   }
@@ -258,6 +278,323 @@ class SmeagolController {
     // Register AI DSL Compiler
     this.aiDslCompiler.register(this.context);
 
+    // ========== NEW FEATURE INTEGRATIONS ==========
+    
+    // Register Quokka live evaluation command
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("smeagol.quokkaEvaluate", async () => {
+        try {
+          const editor = vscode.window.activeTextEditor;
+          if (!editor) {
+            vscode.window.showWarningMessage("No active editor");
+            this.conversationLogger.logCommand("smeagol.quokkaEvaluate", "Live evaluation (Ctrl+Shift+L)", { noEditor: true }, false);
+            return;
+          }
+
+          const selection = editor.selection;
+          const text = editor.document.getText(selection);
+          if (!text.trim()) {
+            vscode.window.showWarningMessage("Select code to evaluate");
+            this.conversationLogger.logCommand("smeagol.quokkaEvaluate", "Live evaluation", { noSelection: true }, false);
+            return;
+          }
+
+          const langId = editor.document.languageId;
+          let result;
+
+          switch (langId) {
+            case "javascript":
+            case "typescript":
+              result = this.quokkaEngine.evaluateJavaScript(text, {});
+              break;
+            case "python":
+              result = await this.quokkaEngine.evaluatePython(text, {});
+              break;
+            case "java":
+              result = this.quokkaEngine.evaluateJava(text, {});
+              break;
+            case "rust":
+              result = this.quokkaEngine.evaluateRust(text, {});
+              break;
+            default:
+              result = { success: false, error: "Language not supported for evaluation" };
+          }
+
+          if (result.success) {
+            this.quokkaEngine.displayInlineResult(editor, selection.active.line, result);
+            vscode.window.showInformationMessage(`✓ ${result.result} (${result.type})`);
+            this.conversationLogger.logCommand("smeagol.quokkaEvaluate", "Live evaluation", { language: langId, result: result.result }, true);
+            this.conversationLogger.logFeatureUsage("Quokka", `Evaluated ${langId} code: ${text.slice(0, 50)}...`, { resultType: result.type });
+          } else {
+            vscode.window.showErrorMessage(`✕ Evaluation error: ${result.error}`);
+            this.conversationLogger.logError("Quokka", result.error, `language: ${langId}`);
+          }
+        } catch (error) {
+          this.conversationLogger.logError("Quokka", error, "Exception in quokkaEvaluate command");
+          vscode.window.showErrorMessage(`Quokka error: ${error.message}`);
+        }
+      })
+    );
+
+    // Register ORM generator commands
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("smeagol.generateJPAEntity", async () => {
+        try {
+          const name = await vscode.window.showInputBox({
+            prompt: "Entity class name (e.g., User)",
+            placeHolder: "User"
+          });
+          
+          if (!name) {
+            this.conversationLogger.logConversation("JPA Entity generation cancelled", "User input dialog", "Cancelled by user");
+            return;
+          }
+
+          const entity = this.ormGenerator.generateJPAEntity(name, [
+            { name: "id", type: "int", primary_key: true },
+            { name: "name", type: "string", nullable: false },
+            { name: "email", type: "string", unique: true },
+          ], { generateLombok: true });
+
+          const doc = await vscode.workspace.openTextDocument({
+            language: "java",
+            content: entity
+          });
+          await vscode.window.showTextDocument(doc);
+          
+          this.conversationLogger.logCommand("smeagol.generateJPAEntity", "Generate JPA/Hibernate entity", { entityName: name, fieldsCount: 3 }, true);
+          this.conversationLogger.logFeatureUsage("ORM Generator", `Generated JPA entity: ${name}`, { orm: "JPA/Hibernate", entityName: name });
+        } catch (error) {
+          this.conversationLogger.logError("ORM Generator", error, "Failed to generate JPA entity");
+          vscode.window.showErrorMessage(`Error generating JPA entity: ${error.message}`);
+        }
+      }),
+
+      vscode.commands.registerCommand("smeagol.generateSQLAlchemyModel", async () => {
+        try {
+          const name = await vscode.window.showInputBox({
+            prompt: "Model class name (e.g., User)",
+            placeHolder: "User"
+          });
+          
+          if (!name) {
+            this.conversationLogger.logConversation("SQLAlchemy model generation cancelled", "User input dialog", "Cancelled by user");
+            return;
+          }
+
+          const model = this.ormGenerator.generateSQLAlchemyModel(name, [
+            { name: "id", type: "int", primary_key: true },
+            { name: "email", type: "string", unique: true },
+          ]);
+
+          const doc = await vscode.workspace.openTextDocument({
+            language: "python",
+            content: model
+          });
+          await vscode.window.showTextDocument(doc);
+          
+          this.conversationLogger.logCommand("smeagol.generateSQLAlchemyModel", "Generate SQLAlchemy model", { modelName: name, fieldsCount: 2 }, true);
+          this.conversationLogger.logFeatureUsage("ORM Generator", `Generated SQLAlchemy model: ${name}`, { orm: "SQLAlchemy", modelName: name });
+        } catch (error) {
+          this.conversationLogger.logError("ORM Generator", error, "Failed to generate SQLAlchemy model");
+          vscode.window.showErrorMessage(`Error generating SQLAlchemy model: ${error.message}`);
+        }
+      }),
+
+      vscode.commands.registerCommand("smeagol.generateGORMModel", async () => {
+        try {
+          const name = await vscode.window.showInputBox({
+            prompt: "Model struct name (e.g., User)",
+            placeHolder: "User"
+          });
+          
+          if (!name) {
+            this.conversationLogger.logConversation("GORM model generation cancelled", "User input dialog", "Cancelled by user");
+            return;
+          }
+
+          const model = this.goctlGenerator.generateGoModel(name, [
+            { name: "ID", type: "int" },
+            { name: "Email", type: "string" },
+            { name: "CreatedAt", type: "datetime" }
+          ]);
+
+          const doc = await vscode.workspace.openTextDocument({
+            language: "go",
+            content: model
+          });
+          await vscode.window.showTextDocument(doc);
+          
+          this.conversationLogger.logCommand("smeagol.generateGORMModel", "Generate GORM model", { modelName: name, fieldsCount: 3 }, true);
+          this.conversationLogger.logFeatureUsage("ORM Generator", `Generated GORM model: ${name}`, { orm: "GORM", modelName: name });
+        } catch (error) {
+          this.conversationLogger.logError("ORM Generator", error, "Failed to generate GORM model");
+          vscode.window.showErrorMessage(`Error generating GORM model: ${error.message}`);
+        }
+      })
+    );
+
+    // Register Diagram preview command
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("smeagol.diagramPreview", async () => {
+        try {
+          const editor = vscode.window.activeTextEditor;
+          if (!editor) {
+            vscode.window.showWarningMessage("No active editor");
+            this.conversationLogger.logCommand("smeagol.diagramPreview", "Diagram preview (Ctrl+Shift+D)", { noEditor: true }, false);
+            return;
+          }
+
+          const fileName = editor.document.fileName;
+          const ext = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+          const diagramType = ['.puml', '.plantuml'].includes(ext) ? 'PlantUML' : ['.mmd', '.mermaid'].includes(ext) ? 'Mermaid' : 'Unknown';
+          
+          await this.diagramPreview.createPreviewPanel(editor, this.context);
+          
+          this.conversationLogger.logCommand("smeagol.diagramPreview", "Diagram preview", { diagramType, fileName: editor.document.fileName }, true);
+          this.conversationLogger.logFeatureUsage("Diagram Preview", `Rendered ${diagramType} diagram`, { diagramType, fileName });
+        } catch (error) {
+          this.conversationLogger.logError("Diagram Preview", error, "Failed to create preview panel");
+          vscode.window.showErrorMessage(`Error creating diagram preview: ${error.message}`);
+        }
+      })
+    );
+
+    // Register Maven analysis command
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("smeagol.mavenAnalyze", async () => {
+        try {
+          const pomUri = await vscode.window.showOpenDialog({
+            filters: { "Maven": ["xml"] },
+            canSelectMany: false
+          });
+
+          if (!pomUri || pomUri.length === 0) {
+            this.conversationLogger.logConversation("Maven analysis cancelled", "File dialog", "No file selected");
+            return;
+          }
+
+          const summary = await this.mavenHelper.getPomSummary(pomUri[0].fsPath);
+          const doc = await vscode.workspace.openTextDocument({
+            language: "markdown",
+            content: summary
+          });
+          await vscode.window.showTextDocument(doc);
+          
+          this.conversationLogger.logCommand("smeagol.mavenAnalyze", "Maven POM analysis", { pomFile: pomUri[0].fsPath }, true);
+          this.conversationLogger.logFeatureUsage("Maven Helper", "Analyzed POM dependencies", { pomFile: pomUri[0].fsPath });
+        } catch (error) {
+          this.conversationLogger.logError("Maven Helper", error, "Failed to analyze Maven POM");
+          vscode.window.showErrorMessage(`Error analyzing Maven POM: ${error.message}`);
+        }
+      })
+    );
+
+    // Register Rust analysis command
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("smeagol.rustAnalyze", () => {
+        try {
+          const editor = vscode.window.activeTextEditor;
+          if (!editor) {
+            vscode.window.showWarningMessage("No active editor");
+            this.conversationLogger.logCommand("smeagol.rustAnalyze", "Rust analysis (Ctrl+Shift+R)", { noEditor: true }, false);
+            return;
+          }
+
+          const analysis = this.rustAnalyzer.analyzeRustFile(editor.document);
+          vscode.window.showInformationMessage(
+            `Rust analysis: ${analysis.count} issues detected`
+          );
+          
+          this.conversationLogger.logCommand("smeagol.rustAnalyze", "Rust analysis", { fileName: editor.document.fileName, issuesCount: analysis.count }, true);
+          this.conversationLogger.logFeatureUsage("Advanced Rust Analyzer", `Analyzed Rust code: ${analysis.count} issues`, { fileName: editor.document.fileName });
+        } catch (error) {
+          this.conversationLogger.logError("Rust Analyzer", error, "Failed to analyze Rust file");
+          vscode.window.showErrorMessage(`Error analyzing Rust file: ${error.message}`);
+        }
+      })
+    );
+
+    // Register Bash completion trigger
+    this.context.subscriptions.push(
+      vscode.commands.registerCommand("smeagol.bashCompletions", () => {
+        try {
+          const editor = vscode.window.activeTextEditor;
+          if (!editor) {
+            this.conversationLogger.logCommand("smeagol.bashCompletions", "Bash completions trigger", { noEditor: true }, false);
+            return;
+          }
+
+          vscode.commands.executeCommand("editor.action.triggerSuggest");
+          this.conversationLogger.logCommand("smeagol.bashCompletions", "Bash completions trigger", { fileName: editor.document.fileName }, true);
+        } catch (error) {
+          this.conversationLogger.logError("Bash Completion", error, "Failed to trigger completions");
+        }
+      })
+    );
+
+    // Register Bash/Makefile completion providers
+    this.context.subscriptions.push(
+      vscode.languages.registerCompletionItemProvider(
+        ["shellscript", "shell-script", "bash"],
+        {
+          provideCompletionItems: (document, position) => {
+            return this.bashCompletion.provideCompletionItems(document, position);
+          }
+        },
+        "$", ".", "-", "("
+      ),
+
+      vscode.languages.registerCompletionItemProvider(
+        { pattern: "**/Makefile" },
+        {
+          provideCompletionItems: (document, position) => {
+            return this.bashCompletion.provideCompletionItems(document, position);
+          }
+        },
+        "$", ".", "@", "-"
+      )
+    );
+
+    // Auto-trigger Rust analysis on Rust file open
+    this.context.subscriptions.push(
+      vscode.workspace.onDidOpenTextDocument((document) => {
+        if (document.languageId === "rust") {
+          // Analyze but don't show popup - user can see in Problems panel
+          const editor = vscode.window.visibleTextEditors.find(e => e.document === document);
+          if (editor) {
+            this.rustAnalyzer.analyzeRustFile(document);
+          }
+        }
+        if (document.languageId === "autoit") {
+          const editor = vscode.window.visibleTextEditors.find(e => e.document === document);
+          if (editor) {
+            this.autoitAnalyzer.analyzeAutoIt(document);
+          }
+        }
+        if (document.fileName.endsWith("pom.xml")) {
+          this.mavenHelper.analyzePom(document.fileName).catch(e => {
+            console.log("Maven analysis error:", e.message);
+          });
+        }
+      })
+    );
+
+    // Auto-show diagram preview on diagram file open
+    this.context.subscriptions.push(
+      vscode.window.onDidChangeActiveTextEditor((editor) => {
+        if (!editor || !editor.document) return;
+        
+        const fileName = editor.document.fileName;
+        if (fileName.endsWith(".puml") || fileName.endsWith(".plantuml") || 
+            fileName.endsWith(".mmd") || fileName.endsWith(".mermaid")) {
+          this.diagramPreview.createPreviewPanel(editor, this.context).catch(e => {
+            console.log("Diagram preview error:", e.message);
+          });
+        }
+      })
+    );
+
     // Register project initialization command
     this.context.subscriptions.push(
       vscode.commands.registerCommand("smeagol.initializeProject", async () => {
@@ -393,6 +730,11 @@ class SmeagolController {
   }
 
   dispose() {
+    // Finalize conversation logger (generates summary)
+    if (this.conversationLogger) {
+      this.conversationLogger.dispose();
+    }
+    
     this.cppHighlighter.dispose();
     this.autoitHighlighter.dispose();
     this.aplHighlighter.dispose();
@@ -407,6 +749,14 @@ class SmeagolController {
     this.complexityAnalyzer.dispose();
     this.symbolSummoner.dispose();
     this.idiomsAnalyzer.dispose();
+    // Dispose new features
+    if (this.neuroUI) this.neuroUI.dispose();
+    if (this.quokkaEngine) this.quokkaEngine.dispose();
+    if (this.ormGenerator) this.ormGenerator.dispose();
+    if (this.diagramPreview) this.diagramPreview.dispose();
+    if (this.mavenHelper) this.mavenHelper.dispose();
+    if (this.rustAnalyzer) this.rustAnalyzer.dispose();
+    if (this.autoitAnalyzer) this.autoitAnalyzer.dispose();
   }
 }
 

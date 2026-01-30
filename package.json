@@ -173,6 +173,63 @@
         "command": "smeagol.summonSymbols",
         "title": "Summon Symbol Wordcloud",
         "category": "Smeagol / Visualization"
+      },
+      {
+        "command": "smeagol.quokkaEvaluate",
+        "title": "Quokka: Evaluate Selected Expression (Ctrl+Shift+L)",
+        "category": "Smeagol / Quokka"
+      },
+      {
+        "command": "smeagol.generateJPAEntity",
+        "title": "Generate JPA Entity (Java)",
+        "category": "Smeagol / ORM"
+      },
+      {
+        "command": "smeagol.generateSQLAlchemyModel",
+        "title": "Generate SQLAlchemy Model (Python)",
+        "category": "Smeagol / ORM"
+      },
+      {
+        "command": "smeagol.generateGORMModel",
+        "title": "Generate GORM Model (Go)",
+        "category": "Smeagol / ORM"
+      },
+      {
+        "command": "smeagol.diagramPreview",
+        "title": "Diagram Preview (Ctrl+Shift+D)",
+        "category": "Smeagol / Diagrams"
+      },
+      {
+        "command": "smeagol.mavenAnalyze",
+        "title": "Analyze Maven Project (pom.xml)",
+        "category": "Smeagol / Maven"
+      },
+      {
+        "command": "smeagol.rustAnalyze",
+        "title": "Analyze Rust File (Ctrl+Shift+R)",
+        "category": "Smeagol / Rust"
+      },
+      {
+        "command": "smeagol.bashCompletions",
+        "title": "Bash Completions (Ctrl+Space)",
+        "category": "Smeagol / Bash"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "smeagol.quokkaEvaluate",
+        "key": "ctrl+shift+l",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "smeagol.diagramPreview",
+        "key": "ctrl+shift+d",
+        "when": "editorLangId == 'plaintext' || resourceExtname =~ /\\.(puml|mmd|plantuml|mermaid)$/"
+      },
+      {
+        "command": "smeagol.rustAnalyze",
+        "key": "ctrl+shift+r",
+        "when": "editorLangId == rust"
       }
     ],
     "configuration": {
@@ -581,6 +638,7 @@
     }
   },
   "devDependencies": {
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "xml2js": "^0.6.2"
   }
 }
