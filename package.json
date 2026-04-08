@@ -633,6 +633,11 @@
           "type": "boolean",
           "default": true,
           "description": "Enable AutoIt semantic highlighting (macros, functions, keywords, variables)."
+        },
+        "smeagol.ada.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Ada semantic highlighting and completion support."
         }
       }
     }

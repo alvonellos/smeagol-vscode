@@ -2,6 +2,7 @@
 
 const vscode = require("vscode");
 const { BRACKET_TYPES } = require("./_constants");
+const { isAdaDocument } = require("./ada-support");
 
 /**
  * Bracket Pair Guides
@@ -115,36 +116,39 @@ class BracketGuidesManager {
   findBracketPairs(doc) {
     const pairs = [];
     const stack = [];
-    const openBrackets = /[(\[{<]/g;
-    const closeBrackets = /[)\]}>]/g;
-    const bracketMap = {
-      ')': '(', ']': '[', '}': '{', '>': '<'
-    };
+    const bracketTypes = this.getBracketTypes(doc);
+    const openBrackets = new Set(Object.keys(bracketTypes));
+    const closeBrackets = Object.fromEntries(
+      Object.entries(bracketTypes).map(([open, meta]) => [meta.close, open])
+    );
 
     for (let lineNum = 0; lineNum < doc.lineCount; lineNum++) {
-      const line = doc.lineAt(lineNum).text;
+      const line = this.sanitizeLineForBracketScan(doc.lineAt(lineNum).text, doc);
 
-      // Find all opening brackets
-      let match;
-      openBrackets.lastIndex = 0;
-      while ((match = openBrackets.exec(line)) !== null) {
-        stack.push({
-          char: match[0],
-          line: lineNum,
-          character: match.index,
-          depth: stack.length
-        });
-      }
+      for (let index = 0; index < line.length; index++) {
+        const char = line[index];
 
-      // Find all closing brackets
-      closeBrackets.lastIndex = 0;
-      while ((match = closeBrackets.exec(line)) !== null) {
+        if (openBrackets.has(char)) {
+          stack.push({
+            char,
+            line: lineNum,
+            character: index,
+            depth: stack.length
+          });
+          continue;
+        }
+
+        const expectedOpen = closeBrackets[char];
+        if (!expectedOpen) {
+          continue;
+        }
+
         const last = stack[stack.length - 1];
-        if (last && bracketMap[match[0]] === last.char) {
+        if (last && expectedOpen === last.char) {
           stack.pop();
           pairs.push({
             open: { line: last.line, character: last.character },
-            close: { line: lineNum, character: match.index },
+            close: { line: lineNum, character: index },
             depth: last.depth
           });
         }
@@ -152,6 +156,63 @@ class BracketGuidesManager {
     }
 
     return pairs;
+  }
+
+  getBracketTypes(doc) {
+    if (!isAdaDocument(doc)) {
+      return BRACKET_TYPES;
+    }
+
+    const bracketTypes = { ...BRACKET_TYPES };
+    delete bracketTypes["<"];
+    return bracketTypes;
+  }
+
+  sanitizeLineForBracketScan(line, doc) {
+    if (!isAdaDocument(doc)) {
+      return line;
+    }
+    return this.maskAdaIgnoredText(line);
+  }
+
+  maskAdaIgnoredText(line) {
+    const chars = Array.from(line);
+
+    for (let index = 0; index < chars.length; index++) {
+      if (chars[index] === "-" && chars[index + 1] === "-") {
+        for (let maskIndex = index; maskIndex < chars.length; maskIndex++) {
+          chars[maskIndex] = " ";
+        }
+        break;
+      }
+
+      if (chars[index] !== "\"") {
+        continue;
+      }
+
+      chars[index] = " ";
+      index += 1;
+
+      while (index < chars.length) {
+        const isQuote = chars[index] === "\"";
+        chars[index] = " ";
+
+        if (!isQuote) {
+          index += 1;
+          continue;
+        }
+
+        if (index + 1 < chars.length && chars[index + 1] === "\"") {
+          chars[index + 1] = " ";
+          index += 2;
+          continue;
+        }
+
+        break;
+      }
+    }
+
+    return chars.join("");
   }
 
   hexToRgba(hex, opacity) {

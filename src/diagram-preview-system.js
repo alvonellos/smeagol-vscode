@@ -48,7 +48,7 @@ class DiagramPreviewSystem {
         `Preview: ${path.basename(documentPath)}`,
         vscode.ViewColumn.Beside,
         {
-          enableScripts: true,
+          enableScripts: format === "mermaid",
           retainContextWhenHidden: true,
           localResourceRoots: [vscode.Uri.file(path.dirname(documentPath))],
         }
@@ -63,7 +63,7 @@ class DiagramPreviewSystem {
 
     // Update content
     const source = editor.document.getText();
-    const html = await this._generatePreviewHTML(source, format, context);
+    const html = await this._generatePreviewHTML(source, format, context, panel.webview);
     panel.webview.html = html;
   }
 
@@ -74,11 +74,11 @@ class DiagramPreviewSystem {
    * @param {vscode.ExtensionContext} context - Extension context
    * @returns {Promise<string>} HTML content
    */
-  async _generatePreviewHTML(source, format, context) {
+  async _generatePreviewHTML(source, format, context, webview) {
     if (format === "plantuml") {
-      return this._generatePlantUMLPreview(source);
+      return this._generatePlantUMLPreview(source, webview);
     } else if (format === "mermaid") {
-      return this._generateMermaidPreview(source);
+      return this._generateMermaidPreview(source, webview);
     }
     return `<html><body>Unknown format</body></html>`;
   }
@@ -88,16 +88,22 @@ class DiagramPreviewSystem {
    * @param {string} source - PlantUML source
    * @returns {string} HTML content
    */
-  _generatePlantUMLPreview(source) {
+  _generatePlantUMLPreview(source, webview) {
     // Encode source for PlantUML server
     const encoded = this._encodePlantUML(source);
     const imageUrl = `https://www.plantuml.com/plantuml/svg/${encoded}`;
+    const csp = [
+      "default-src 'none'",
+      "img-src https://www.plantuml.com data:",
+      "style-src 'unsafe-inline'"
+    ].join("; ");
 
     return `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="${csp}">
     <style>
         body {
             margin: 0;
@@ -149,7 +155,7 @@ class DiagramPreviewSystem {
             <strong>PlantUML Preview</strong> (auto-updates on save)
         </div>
         <div class="content">
-            <img src="${imageUrl}" alt="PlantUML Diagram" class="diagram" onerror="this.parentElement.innerHTML='<div class=\\"error\\">Failed to render diagram. Check syntax.</div>'">
+            <img src="${imageUrl}" alt="PlantUML Diagram" class="diagram">
         </div>
     </div>
 </body>
@@ -162,12 +168,21 @@ class DiagramPreviewSystem {
    * @param {string} source - Mermaid source
    * @returns {string} HTML content
    */
-  _generateMermaidPreview(source) {
+  _generateMermaidPreview(source, webview) {
+    const nonce = this._createNonce();
+    const csp = [
+      "default-src 'none'",
+      "img-src data: https:",
+      "style-src 'unsafe-inline'",
+      `script-src 'nonce-${nonce}' https://cdn.jsdelivr.net`
+    ].join("; ");
+
     return `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="${csp}">
     <style>
         body {
             margin: 0;
@@ -208,8 +223,8 @@ class DiagramPreviewSystem {
             border-left: 4px solid #ff6b6b;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"><\/script>
-    <script>
+    <script nonce="${nonce}" src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"><\/script>
+    <script nonce="${nonce}">
         mermaid.initialize({ startOnLoad: true, theme: 'light' });
     <\/script>
 </head>
@@ -224,12 +239,16 @@ ${this._escapeMermaidSource(source)}
             </div>
         </div>
     </div>
-    <script>
+    <script nonce="${nonce}">
         mermaid.contentLoaded();
     <\/script>
 </body>
 </html>
     `;
+  }
+
+  _createNonce() {
+    return `${Date.now()}${Math.random().toString(16).slice(2)}`;
   }
 
   /**

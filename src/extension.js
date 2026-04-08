@@ -12,8 +12,10 @@ const { JavaHighlighter } = require("./java-highlighter");
 const { CppHighlighter } = require("./cpp-highlighter");
 const { AutoItHighlighter } = require("./autoit-highlighter");
 const { AplHighlighter } = require("./apl-highlighter");
+const { AdaHighlighter } = require("./ada-highlighter");
 const { AutoItCompletionProvider } = require("./autoit-completion");
 const { RustCompletionProvider } = require("./rust-completion");
+const { AdaCompletionProvider } = require("./ada-completion");
 const { LombokCompletionProvider } = require("./lombok-completion");
 const { PythonCompletionProvider } = require("./python-completion");
 const { PythonCompletionProvider: PythonCompletionProviderEnhanced } = require("./python-completion-enhanced");
@@ -47,6 +49,7 @@ const { AdvancedRustAnalyzer } = require("./advanced-rust-analyzer");
 const { BashShellMakefileCompletion } = require("./bash-shell-makefile-completion");
 const { EnhancedAutoItConfigAnalyzer } = require("./enhanced-autoit-config-analyzer");
 const { ConversationLogger } = require("./conversation-logger");
+const { ADA_DOCUMENT_SELECTORS } = require("./ada-support");
 
 class SmeagolController {
   constructor(context) {
@@ -61,8 +64,10 @@ class SmeagolController {
     this.cppHighlighter = new CppHighlighter();
     this.autoitHighlighter = new AutoItHighlighter();
     this.aplHighlighter = new AplHighlighter();
+    this.adaHighlighter = new AdaHighlighter();
     this.autoitCompletionProvider = new AutoItCompletionProvider();
     this.rustCompletionProvider = new RustCompletionProvider();
+    this.adaCompletionProvider = new AdaCompletionProvider();
     this.lombokCompletionProvider = new LombokCompletionProvider();
     this.pythonCompletionProvider = new PythonCompletionProvider();
     this.springBootCompletionProvider = new SpringBootCompletionProvider();
@@ -139,6 +144,7 @@ class SmeagolController {
         this.cppHighlighter.reset();
         this.autoitHighlighter.reset();
         this.aplHighlighter.reset();
+        this.adaHighlighter.reset();
         schedule();
       }),
       // Register AutoIt completion provider - We provides ALL the precious words!
@@ -156,6 +162,15 @@ class SmeagolController {
         { language: 'rust', scheme: 'file' },
         this.rustCompletionProvider,
         'V', 'S', 'H', 'M', 'A', 'I', 'O', 'R', 'B', 'F', 'E', 'T', 'C', 'D', 'P', 'L', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+      ),
+      // Register Ada completion provider - packages, pragmas, attributes, and declarations.
+      vscode.languages.registerCompletionItemProvider(
+        ADA_DOCUMENT_SELECTORS,
+        this.adaCompletionProvider,
+        '\'', '.', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
       ),
       // Register Lombok completion provider - We knows the precious Lombok annotations!
       vscode.languages.registerCompletionItemProvider(
@@ -709,6 +724,7 @@ class SmeagolController {
       this.cppHighlighter.clearAll(editors);
       this.autoitHighlighter.clearAll(editors);
       this.aplHighlighter.clearAll(editors);
+      this.adaHighlighter.clearAll(editors);
       return;
     }
 
@@ -725,7 +741,12 @@ class SmeagolController {
       Promise.resolve(editors.forEach(editor => this.javaHighlighter.update(editor))),
       Promise.resolve(editors.forEach(editor => this.cppHighlighter.update(editor))),
       Promise.resolve(editors.forEach(editor => this.autoitHighlighter.update(editor))),
-      Promise.resolve(editors.forEach(editor => this.aplHighlighter.update(editor)))
+      Promise.resolve(editors.forEach(editor => this.aplHighlighter.update(editor))),
+      Promise.resolve(
+        config.ada && config.ada.enabled
+          ? editors.forEach(editor => this.adaHighlighter.update(editor))
+          : this.adaHighlighter.clearAll(editors)
+      )
     ]);
   }
 
@@ -738,6 +759,7 @@ class SmeagolController {
     this.cppHighlighter.dispose();
     this.autoitHighlighter.dispose();
     this.aplHighlighter.dispose();
+    this.adaHighlighter.dispose();
     this.highlightManager.dispose();
     this.indentManager.dispose();
     this.functionManager.dispose();

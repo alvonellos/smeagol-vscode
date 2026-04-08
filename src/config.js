@@ -94,6 +94,10 @@ function getConfig() {
     enabled: !!config.get("autoit.enabled", true)
   };
 
+  const ada = {
+    enabled: !!config.get("ada.enabled", true)
+  };
+
   return {
     enabled: !!config.get("enabled", true),
     performance,
@@ -105,7 +109,8 @@ function getConfig() {
     rust,
     java,
     cpp,
-    autoit
+    autoit,
+    ada
   };
 }
 

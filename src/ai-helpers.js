@@ -557,33 +557,6 @@ mod tests {
       return;
     }
 
-    const message = new vscode.MarkdownString();
-    message.isTrusted = true;
-    message.value = `
-### Code Explanation
-
-**Selected Code:**
-\`\`\`
-${code}
-\`\`\`
-
-### Analysis
-
-This code block:
-1. **Purpose**: Performs specific functionality
-2. **Key Components**: Identify important parts
-3. **Data Flow**: How data moves through the code
-4. **Potential Issues**: Complexity, performance, edge cases
-
-### Suggestions
-- Consider adding error handling
-- Add type hints for clarity
-- Consider performance implications
-- Review for security concerns
-
-*Note: For AI-powered explanations, integrate with Copilot Chat API.*
-    `;
-
     const panel = vscode.window.createWebviewPanel(
       "codeExplanation",
       "Code Explanation",
