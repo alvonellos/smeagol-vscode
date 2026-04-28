@@ -7,16 +7,16 @@
 
 // Color Palettes
 const DEFAULT_PALETTE = [
-  "#ff844c", // orange
-  "#fdd835", // yellow
-  "#aee571", // light green
-  "#039be5", // blue
-  "#c158dc", // magenta
+  "#ff6600", // vivid orange
+  "#ffff00", // bright yellow
+  "#00ff00", // neon green
+  "#0099ff", // vivid blue
+  "#ff00ff", // magenta
   "#ff006f", // pink
   "#00e71c", // green
-  "#00c7ff", // cyan
-  "#facd45", // gold
-  "#ffc66d"  // light orange
+  "#00ffff", // cyan
+  "#ffdd00", // gold
+  "#ffaa00"  // bright orange
 ];
 
 // LGBT Pride Flag Colors (in proper order)
@@ -26,7 +26,7 @@ const LGBT_PRIDE_PALETTE = [
   "#FFFF00", // Yellow
   "#00FF00", // Green (Lime)
   "#0000FF", // Blue
-  "#4B0082"  // Indigo/Purple
+  "#8b00ff"  // violet
 ];
 
 // Keywords to exclude from highlighting

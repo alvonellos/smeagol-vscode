@@ -24,9 +24,9 @@ function getConfig() {
     minOccurrences: toNumber(config.get("highlights.minOccurrences"), 2),
     minLength: toNumber(config.get("highlights.minLength"), 2),
     maxTokens: toNumber(config.get("highlights.maxTokens"), 120),
-    backgroundOpacity: toOpacity(config.get("highlights.backgroundOpacity"), 0.16),
-    borderOpacity: toOpacity(config.get("highlights.borderOpacity"), 0.65),
-    borderWidth: toNumber(config.get("highlights.borderWidth"), 1),
+    backgroundOpacity: toOpacity(config.get("highlights.backgroundOpacity"), 0.28),
+    borderOpacity: toOpacity(config.get("highlights.borderOpacity"), 0.9),
+    borderWidth: toNumber(config.get("highlights.borderWidth"), 2),
     borderRadius: toNumber(config.get("highlights.borderRadius"), 2),
     exclude: sanitizeStringArray(config.get("highlights.exclude"), DEFAULT_EXCLUDE),
     ignoreLanguages: sanitizeStringArray(config.get("highlights.ignoreLanguages"), [])
@@ -35,8 +35,8 @@ function getConfig() {
   const indent = {
     enabled: !!config.get("indent.enabled", true),
     colors: sanitizeColorArray(config.get("indent.colors"), DEFAULT_PALETTE),
-    indentOpacity: toOpacity(config.get("indent.indentOpacity"), 0.18),
-    lineOpacity: toOpacity(config.get("indent.lineOpacity"), 0.08),
+    indentOpacity: toOpacity(config.get("indent.indentOpacity"), 0.26),
+    lineOpacity: toOpacity(config.get("indent.lineOpacity"), 0.12),
     style: config.get("indent.style", "both"),
     ignoreLanguages: sanitizeStringArray(config.get("indent.ignoreLanguages"), [])
   };
@@ -49,8 +49,8 @@ function getConfig() {
     maxSymbols: toNumber(config.get("functions.maxSymbols"), 200),
     requireDefinitionAndCall: !!config.get("functions.requireDefinitionAndCall", true),
     highlightStyle: config.get("functions.highlightStyle", "line"),
-    backgroundOpacity: toOpacity(config.get("functions.backgroundOpacity"), 0.12),
-    borderOpacity: toOpacity(config.get("functions.borderOpacity"), 0.55),
+    backgroundOpacity: toOpacity(config.get("functions.backgroundOpacity"), 0.22),
+    borderOpacity: toOpacity(config.get("functions.borderOpacity"), 0.85),
     borderWidth: toNumber(config.get("functions.borderWidth"), 1),
     borderRadius: toNumber(config.get("functions.borderRadius"), 2),
     includeLanguages: sanitizeStringArray(config.get("functions.includeLanguages"), [])
@@ -75,7 +75,7 @@ function getConfig() {
     colors: sanitizeColorArray(config.get("brackets.colors"), LGBT_PRIDE_PALETTE),
     style: config.get("brackets.style", "bracket"),
     lineWidth: toNumber(config.get("brackets.lineWidth"), 1),
-    lineOpacity: toOpacity(config.get("brackets.lineOpacity"), 0.5)
+    lineOpacity: toOpacity(config.get("brackets.lineOpacity"), 0.85)
   };
 
   const rust = {

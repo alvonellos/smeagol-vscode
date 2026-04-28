@@ -110,9 +110,10 @@ class SmeagolController {
   start() {
     const schedule = () => this.scheduleUpdate();
     
-    // Auto-analyze complexity on file open or change
+    // Optional diagnostics pass. Commands still run analysis on demand.
     const autoAnalyzeComplexity = (editor) => {
-      if (editor && editor.document && !editor.document.isUntitled) {
+      const cfg = vscode.workspace.getConfiguration("smeagol");
+      if (cfg.get("analysis.autoAnalyze", false) && editor && editor.document && !editor.document.isUntitled) {
         this.complexityAnalyzer.analyzeDocument(editor);
         this.idiomsAnalyzer.analyzeDocument(editor);
       }
@@ -147,7 +148,7 @@ class SmeagolController {
         this.adaHighlighter.reset();
         schedule();
       }),
-      // Register AutoIt completion provider - We provides ALL the precious words!
+      // Register AutoIt completion provider.
       vscode.languages.registerCompletionItemProvider(
         { language: 'autoit', scheme: 'file' },
         this.autoitCompletionProvider,
@@ -157,7 +158,7 @@ class SmeagolController {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
         'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
       ),
-      // Register Rust completion provider - We knows the precious Rust traits and crates!
+      // Register Rust completion provider.
       vscode.languages.registerCompletionItemProvider(
         { language: 'rust', scheme: 'file' },
         this.rustCompletionProvider,
@@ -172,12 +173,11 @@ class SmeagolController {
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
         'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
       ),
-      // Register Lombok completion provider - We knows the precious Lombok annotations!
+      // Register Lombok completion provider.
       vscode.languages.registerCompletionItemProvider(
         { language: 'java', scheme: 'file' },
         this.lombokCompletionProvider,
-        '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+        '@'
       ),
       // Python completions
       vscode.languages.registerCompletionItemProvider(
@@ -227,7 +227,7 @@ class SmeagolController {
         this.jenkinsCompletionProvider,
         'p', 'a', 's', 't', 's', 'p', 'a', 'a', 'e', 'w', 'j', 'b', 's', 'r', 'u', 'c', 'f', 'g'
       ),
-      // APL completions - We knows the precious APL operators!
+      // APL completions.
       vscode.languages.registerCompletionItemProvider(
         { language: 'apl', scheme: 'file' },
         this.aplCompletionProvider,
@@ -237,14 +237,14 @@ class SmeagolController {
         '=', '≠', '<', '>', '≤', '≥',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
       ),
-      // Go completions - We knows the precious Go stdlib and concurrency patterns!
+      // Go completions.
       vscode.languages.registerCompletionItemProvider(
         { language: 'go', scheme: 'file' },
         this.goCompletionProvider,
         'f', 'i', 'n', 's', 'c', 'h', 'e', 't', 'b', 'm', 'o', 'r', 'j', 'p', 'u', 'd', 'g', 'k', 'l', 'v', 'w', 'x', 'y', 'z',
         'F', 'I', 'N', 'S', 'C', 'H', 'E', 'T', 'B', 'M', 'O', 'R', 'J', 'P', 'U', 'D', 'G', 'K', 'L', 'V', 'W', 'X', 'Y', 'Z'
       ),
-      // YAML completions - We knows Docker Compose, Kubernetes, and GitHub Actions!
+      // YAML completions.
       vscode.languages.registerCompletionItemProvider(
         { language: 'yaml', scheme: 'file' },
         this.yamlCompletionProvider,

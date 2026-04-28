@@ -2,7 +2,7 @@
   "name": "smeagol-vscode",
   "displayName": "Smeagol VS Code",
   "description": "Polyglot IDE: 10+ language completions, semantic highlighting, AI DSL compiler, SonarQube integration, project concordance system.",
-  "version": "0.2.3",
+  "version": "1.0.3",
   "publisher": "alexa",
   "icon": "icon.png",
   "repository": {
@@ -263,16 +263,16 @@
         "smeagol.highlights.colors": {
           "type": "array",
           "default": [
-            "#ff844c",
-            "#fdd835",
-            "#aee571",
-            "#039be5",
-            "#c158dc",
+            "#ff6600",
+            "#ffff00",
+            "#00ff00",
+            "#0099ff",
+            "#ff00ff",
             "#ff006f",
             "#00e71c",
-            "#00c7ff",
-            "#facd45",
-            "#ffc66d"
+            "#00ffff",
+            "#ffdd00",
+            "#ffaa00"
           ],
           "items": {
             "type": "string"
@@ -296,17 +296,17 @@
         },
         "smeagol.highlights.backgroundOpacity": {
           "type": "number",
-          "default": 0.16,
+          "default": 0.28,
           "description": "Background opacity for highlight decorations (0-1)."
         },
         "smeagol.highlights.borderOpacity": {
           "type": "number",
-          "default": 0.65,
+          "default": 0.9,
           "description": "Border opacity for highlight decorations (0-1)."
         },
         "smeagol.highlights.borderWidth": {
           "type": "number",
-          "default": 1,
+          "default": 2,
           "description": "Border width in pixels for highlight decorations."
         },
         "smeagol.highlights.borderRadius": {
@@ -396,16 +396,16 @@
         "smeagol.indent.colors": {
           "type": "array",
           "default": [
-            "#ff844c",
-            "#fdd835",
-            "#aee571",
-            "#039be5",
-            "#c158dc",
+            "#ff6600",
+            "#ffff00",
+            "#00ff00",
+            "#0099ff",
+            "#ff00ff",
             "#ff006f",
             "#00e71c",
-            "#00c7ff",
-            "#facd45",
-            "#ffc66d"
+            "#00ffff",
+            "#ffdd00",
+            "#ffaa00"
           ],
           "items": {
             "type": "string"
@@ -414,12 +414,12 @@
         },
         "smeagol.indent.indentOpacity": {
           "type": "number",
-          "default": 0.18,
+          "default": 0.26,
           "description": "Opacity for indentation block coloring (0-1)."
         },
         "smeagol.indent.lineOpacity": {
           "type": "number",
-          "default": 0.08,
+          "default": 0.12,
           "description": "Opacity for full-line shading (0-1)."
         },
         "smeagol.indent.style": {
@@ -448,16 +448,16 @@
         "smeagol.functions.colors": {
           "type": "array",
           "default": [
-            "#ff844c",
-            "#fdd835",
-            "#aee571",
-            "#039be5",
-            "#c158dc",
+            "#ff6600",
+            "#ffff00",
+            "#00ff00",
+            "#0099ff",
+            "#ff00ff",
             "#ff006f",
             "#00e71c",
-            "#00c7ff",
-            "#facd45",
-            "#ffc66d"
+            "#00ffff",
+            "#ffdd00",
+            "#ffaa00"
           ],
           "items": {
             "type": "string"
@@ -495,12 +495,12 @@
         },
         "smeagol.functions.backgroundOpacity": {
           "type": "number",
-          "default": 0.12,
+          "default": 0.22,
           "description": "Background opacity for function highlights (0-1)."
         },
         "smeagol.functions.borderOpacity": {
           "type": "number",
-          "default": 0.55,
+          "default": 0.85,
           "description": "Border opacity for function highlights (0-1)."
         },
         "smeagol.functions.borderWidth": {
@@ -587,7 +587,7 @@
             "#FFFF00",
             "#00FF00",
             "#0000FF",
-            "#4B0082"
+            "#8B00FF"
           ],
           "items": {
             "type": "string"
@@ -611,7 +611,7 @@
         },
         "smeagol.brackets.lineOpacity": {
           "type": "number",
-          "default": 0.5,
+          "default": 0.85,
           "description": "Opacity for bracket guide lines (0-1)."
         },
         "smeagol.rust.enabled": {
@@ -638,6 +638,16 @@
           "type": "boolean",
           "default": true,
           "description": "Enable Ada semantic highlighting and completion support."
+        },
+        "smeagol.lombok.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable context-aware Lombok annotation completions in Java files."
+        },
+        "smeagol.analysis.autoAnalyze": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically run complexity and idiom diagnostics when editors open or change. Commands still work when disabled."
         }
       }
     }

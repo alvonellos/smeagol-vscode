@@ -134,6 +134,21 @@ function getVisibleRanges(editor) {
   return [new vscode.Range(0, 0, lastLine, endCharacter)];
 }
 
+function isRangeVisible(startPos, endPos, visibleRanges) {
+  return visibleRanges.some((range) => {
+    if (endPos.line < range.start.line || startPos.line > range.end.line) {
+      return false;
+    }
+    if (startPos.line === range.end.line && startPos.character > range.end.character) {
+      return false;
+    }
+    if (endPos.line === range.start.line && endPos.character < range.start.character) {
+      return false;
+    }
+    return true;
+  });
+}
+
 function getVisibleLines(editor) {
   const lines = new Set();
   const doc = editor.document;
@@ -295,6 +310,7 @@ module.exports = {
   shouldProcessDocument,
   isLanguageIncluded,
   getVisibleRanges,
+  isRangeVisible,
   getVisibleLines,
   getTabSize,
   getIndentSegments,

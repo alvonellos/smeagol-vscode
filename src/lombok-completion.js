@@ -184,15 +184,37 @@ class LombokCompletionProvider {
       const item = new vscode.CompletionItem(anno.label, anno.kind);
       item.detail = anno.detail;
       item.documentation = new vscode.MarkdownString(anno.doc);
-      // Add common Lombok imports to filter
       item.insertText = anno.label;
+      item.filterText = anno.label.replace(/^@/, "");
+      item.sortText = `0_${anno.label}`;
       this.completionItems.push(item);
     });
   }
 
   provideCompletionItems(document, position, token, context) {
-    // Only show Lombok completions if @ is typed or in Java files
+    const cfg = vscode.workspace.getConfiguration("smeagol");
+    if (!cfg.get("lombok.enabled", true)) {
+      return [];
+    }
+
+    if (!this.isAnnotationContext(document, position, context)) {
+      return [];
+    }
+
     return this.completionItems;
+  }
+
+  isAnnotationContext(document, position, context) {
+    if (document.languageId !== "java") {
+      return false;
+    }
+
+    if (context && context.triggerCharacter === "@") {
+      return true;
+    }
+
+    const linePrefix = document.lineAt(position.line).text.slice(0, position.character);
+    return /^\s*@[\w.]*$/.test(linePrefix);
   }
 
   resolveCompletionItem(item, token) {

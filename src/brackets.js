@@ -1,8 +1,8 @@
+
 "use strict";
 
 const vscode = require("vscode");
 const { BRACKET_TYPES } = require("./_constants");
-const { isAdaDocument } = require("./ada-support");
 
 /**
  * Bracket Pair Guides
@@ -40,16 +40,16 @@ class BracketGuidesManager {
     }
 
     const colors = cfg.colors || [
-      "#ff844c",
-      "#fdd835",
-      "#aee571",
-      "#039be5",
-      "#c158dc",
+      "#ff6600",
+      "#ffff00",
+      "#00ff00",
+      "#0099ff",
+      "#ff00ff",
       "#ff006f",
       "#00e71c",
-      "#00c7ff",
-      "#facd45",
-      "#ffc66d"
+      "#00ffff",
+      "#ffdd00",
+      "#ffaa00"
     ];
 
     const styleKey = JSON.stringify([colors, cfg.lineWidth, cfg.lineOpacity, cfg.style]);
@@ -59,7 +59,7 @@ class BracketGuidesManager {
 
       // Create decorations for each depth level
       this.decorationTypes = colors.map((color) => {
-        const opacity = cfg.lineOpacity || 0.5;
+        const opacity = cfg.lineOpacity || 0.85;
         const borderColor = this.hexToRgba(color, opacity);
         
         return vscode.window.createTextEditorDecorationType({
@@ -116,39 +116,39 @@ class BracketGuidesManager {
   findBracketPairs(doc) {
     const pairs = [];
     const stack = [];
-    const bracketTypes = this.getBracketTypes(doc);
-    const openBrackets = new Set(Object.keys(bracketTypes));
-    const closeBrackets = Object.fromEntries(
-      Object.entries(bracketTypes).map(([open, meta]) => [meta.close, open])
-    );
+    const trackAngles = this.shouldTrackAngleBrackets(doc);
+    const bracketMap = {
+      ')': '(', ']': '[', '}': '{', '>': '<'
+    };
+    const openChars = trackAngles ? "([{<" : "([{";
+    const closeChars = trackAngles ? ")]}>" : ")]}";
 
     for (let lineNum = 0; lineNum < doc.lineCount; lineNum++) {
-      const line = this.sanitizeLineForBracketScan(doc.lineAt(lineNum).text, doc);
+      const line = this.stripCommentsAndStrings(doc.lineAt(lineNum).text, doc.languageId);
 
-      for (let index = 0; index < line.length; index++) {
-        const char = line[index];
-
-        if (openBrackets.has(char)) {
+      for (let character = 0; character < line.length; character++) {
+        const char = line[character];
+        if (openChars.includes(char)) {
           stack.push({
             char,
             line: lineNum,
-            character: index,
+            character,
             depth: stack.length
           });
           continue;
         }
 
-        const expectedOpen = closeBrackets[char];
-        if (!expectedOpen) {
+        if (!closeChars.includes(char)) {
           continue;
         }
 
+        const expectedOpen = bracketMap[char];
         const last = stack[stack.length - 1];
         if (last && expectedOpen === last.char) {
           stack.pop();
           pairs.push({
             open: { line: last.line, character: last.character },
-            close: { line: lineNum, character: index },
+            close: { line: lineNum, character },
             depth: last.depth
           });
         }
@@ -158,57 +158,63 @@ class BracketGuidesManager {
     return pairs;
   }
 
-  getBracketTypes(doc) {
-    if (!isAdaDocument(doc)) {
-      return BRACKET_TYPES;
-    }
-
-    const bracketTypes = { ...BRACKET_TYPES };
-    delete bracketTypes["<"];
-    return bracketTypes;
+  shouldTrackAngleBrackets(doc) {
+    return [
+      "typescript",
+      "typescriptreact",
+      "javascript",
+      "javascriptreact",
+      "java",
+      "cpp",
+      "c",
+      "csharp",
+      "kotlin",
+      "rust"
+    ].includes(doc.languageId);
   }
 
-  sanitizeLineForBracketScan(line, doc) {
-    if (!isAdaDocument(doc)) {
-      return line;
+  stripCommentsAndStrings(line, languageId) {
+    let commentStart = -1;
+    if (languageId === "ada") {
+      commentStart = line.indexOf("--");
+    } else {
+      const slashComment = line.indexOf("//");
+      const hashComment = ["python", "shell", "powershell", "yaml"].includes(languageId)
+        ? line.indexOf("#")
+        : -1;
+      commentStart = [slashComment, hashComment]
+        .filter((index) => index >= 0)
+        .sort((a, b) => a - b)[0] ?? -1;
     }
-    return this.maskAdaIgnoredText(line);
-  }
 
-  maskAdaIgnoredText(line) {
-    const chars = Array.from(line);
+    const scanLimit = commentStart >= 0 ? commentStart : line.length;
+    const chars = line.split("");
+    let quote = null;
+    let escaped = false;
 
-    for (let index = 0; index < chars.length; index++) {
-      if (chars[index] === "-" && chars[index + 1] === "-") {
-        for (let maskIndex = index; maskIndex < chars.length; maskIndex++) {
-          chars[maskIndex] = " ";
+    for (let index = 0; index < scanLimit; index++) {
+      const char = line[index];
+      if (quote) {
+        chars[index] = " ";
+        if (escaped) {
+          escaped = false;
+        } else if (char === "\\") {
+          escaped = true;
+        } else if (char === quote) {
+          quote = null;
         }
-        break;
-      }
-
-      if (chars[index] !== "\"") {
         continue;
       }
 
-      chars[index] = " ";
-      index += 1;
-
-      while (index < chars.length) {
-        const isQuote = chars[index] === "\"";
+      if (char === "\"" || char === "'" || char === "`") {
+        quote = char;
         chars[index] = " ";
+      }
+    }
 
-        if (!isQuote) {
-          index += 1;
-          continue;
-        }
-
-        if (index + 1 < chars.length && chars[index + 1] === "\"") {
-          chars[index + 1] = " ";
-          index += 2;
-          continue;
-        }
-
-        break;
+    if (commentStart >= 0) {
+      for (let index = commentStart; index < chars.length; index++) {
+        chars[index] = " ";
       }
     }
 
